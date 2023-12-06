@@ -1,0 +1,6 @@
+tasks:
+  - init: mvn spring-boot:run
+    command: mvn
+ports:
+  - port: 8080
+    onOpen: open-preview
