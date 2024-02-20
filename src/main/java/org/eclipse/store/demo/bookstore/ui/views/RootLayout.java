@@ -14,6 +14,7 @@ package org.eclipse.store.demo.bookstore.ui.views;
  * #L%
  */
 
+import com.vaadin.flow.component.dependency.StyleSheet;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -33,7 +34,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
  * Root layout for all views, containing the main menu.
  *
  */
-@CssImport("./styles/shared-styles.css")
+@StyleSheet("context://frontend/styles/shared-styles.css")
 public class RootLayout extends AppLayout {
 
     private H2 viewTitle;
