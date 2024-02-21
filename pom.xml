@@ -110,11 +110,6 @@
 			<version>${lucene.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>31.1-jre</version>
-		</dependency>
-		<dependency>
 			<groupId>org.rapidpm</groupId>
 			<artifactId>rapidpm-logger-adapter</artifactId>
 			<version>01.00.10-RPM</version>

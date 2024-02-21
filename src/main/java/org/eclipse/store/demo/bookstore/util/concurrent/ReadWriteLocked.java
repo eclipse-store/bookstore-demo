@@ -1,5 +1,7 @@
 package org.eclipse.store.demo.bookstore.util.concurrent;
 
+import java.util.concurrent.locks.Lock;
+
 /*-
  * #%L
  * EclipseStore BookStore Demo
@@ -15,8 +17,7 @@ package org.eclipse.store.demo.bookstore.util.concurrent;
  */
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
+import java.util.function.Supplier;
 
 /**
  * Facility to execute operations with read and write locks.
@@ -35,6 +36,51 @@ public class ReadWriteLocked
 	{
 		super();
 	}
+	
+	/**
+	 * Executes an operation protected by a read lock.
+	 *
+	 * @param <T> the operation's return type
+	 * @param operation the operation to execute
+	 * @return the operation's result
+	 */
+	public final <T> T read(final Supplier<T> operation)
+	{
+		return this.execute(this.mutex().readLock(), operation);
+	}
+
+	/**
+	 * Executes an operation protected by a read lock.
+	 *
+	 * @param operation the operation to execute
+	 */
+	public final void read(final Runnable operation)
+	{
+		this.execute(this.mutex().readLock(), operation);
+	}
+
+	/**
+	 * Executes an operation protected by a write lock.
+	 *
+	 * @param <T> the operation's return type
+	 * @param operation the operation to execute
+	 * @return the operation's result
+	 */
+	public final <T> T write(final Supplier<T> operation)
+	{
+		return this.execute(this.mutex().writeLock(), operation);
+	}
+
+	/**
+	 * Executes an operation protected by a write lock.
+	 *
+	 * @param operation the operation to execute
+	 */
+	public final void write(final Runnable operation)
+	{
+		this.execute(this.mutex().writeLock(), operation);
+	}
+	
 	
 	private ReentrantReadWriteLock mutex()
 	{
@@ -56,88 +102,30 @@ public class ReadWriteLocked
 		}
 		return mutex;
 	}
+		
+	private <T> T execute(final Lock theLock, final Supplier<T> operation)
+	{
+		theLock.lock();
+		try
+		{
+			return operation.get();
+		}
+		finally
+		{
+			theLock.unlock();
+		}
+	}
 	
-	/**
-	 * Executes an operation protected by a read lock.
-	 *
-	 * @param <T> the operation's return type
-	 * @param operation the operation to execute
-	 * @return the operation's result
-	 */
-	public final <T> T read(final ValueOperation<T> operation)
+	private void execute(final Lock theLock, final Runnable operation)
 	{
-		final ReadLock readLock = this.mutex().readLock();
-		readLock.lock();
-
+		theLock.lock();
 		try
 		{
-			return operation.execute();
+			operation.run();
 		}
 		finally
 		{
-			readLock.unlock();
-		}
-	}
-
-	/**
-	 * Executes an operation protected by a read lock.
-	 *
-	 * @param operation the operation to execute
-	 */
-	public final void read(final VoidOperation operation)
-	{
-		final ReadLock readLock = this.mutex().readLock();
-		readLock.lock();
-
-		try
-		{
-			operation.execute();
-		}
-		finally
-		{
-			readLock.unlock();
-		}
-	}
-
-	/**
-	 * Executes an operation protected by a write lock.
-	 *
-	 * @param <T> the operation's return type
-	 * @param operation the operation to execute
-	 * @return the operation's result
-	 */
-	public final <T> T write(final ValueOperation<T> operation)
-	{
-		final WriteLock writeLock = this.mutex().writeLock();
-		writeLock.lock();
-
-		try
-		{
-			return operation.execute();
-		}
-		finally
-		{
-			writeLock.unlock();
-		}
-	}
-
-	/**
-	 * Executes an operation protected by a write lock.
-	 *
-	 * @param operation the operation to execute
-	 */
-	public final void write(final VoidOperation operation)
-	{
-		final WriteLock writeLock = this.mutex().writeLock();
-		writeLock.lock();
-
-		try
-		{
-			operation.execute();
-		}
-		finally
-		{
-			writeLock.unlock();
+			theLock.unlock();
 		}
 	}
 

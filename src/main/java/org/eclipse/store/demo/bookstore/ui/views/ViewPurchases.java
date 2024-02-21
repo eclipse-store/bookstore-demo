@@ -25,9 +25,9 @@ import org.eclipse.store.demo.bookstore.data.Purchase;
 import org.eclipse.store.demo.bookstore.data.PurchaseItem;
 import org.eclipse.store.demo.bookstore.data.Purchases;
 import org.eclipse.store.demo.bookstore.data.Shop;
+import org.eclipse.store.demo.bookstore.util.Range;
 import org.javamoney.moneta.function.MonetarySummaryStatistics;
 
-import com.google.common.collect.Range;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
@@ -76,12 +76,12 @@ public class ViewPurchases extends ViewEntity<Purchase>
 		this.addGridColumn                 ("total"    , moneyRenderer(Purchase::total)    )
 			.setFooter(this.totalColumnFooter = new Span());
 
-		final Range<Integer> years = BookStoreDemo.getInstance().data().purchases().years();
+		final Range years = BookStoreDemo.getInstance().data().purchases().years();
 
 		final IntegerField yearField = new IntegerField();
 		yearField.setStepButtonsVisible(true);
-		yearField.setMin(years.lowerEndpoint());
-		yearField.setMax(years.upperEndpoint());
+		yearField.setMin(years.lowerBound());
+		yearField.setMax(years.upperBound());
 		yearField.setValue(this.year);
 		yearField.addValueChangeListener(event -> {
 			this.year = event.getValue();

@@ -41,11 +41,11 @@ import javax.money.MonetaryAmount;
 import org.eclipse.serializer.persistence.types.Persister;
 import org.eclipse.serializer.reference.Lazy;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
+import org.eclipse.store.demo.bookstore.util.Range;
 import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
 import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLockedStriped;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 
-import com.google.common.collect.Range;
 
 /**
  * All purchases made by all customers in all stores.
@@ -304,13 +304,13 @@ public class Purchases extends ReadWriteLockedStriped
 	 *
 	 * @return all years with revenue
 	 */
-	public Range<Integer> years()
+	public Range years()
 	{
 		return this.read(0, () -> {
 			final IntSummaryStatistics summary = this.yearlyPurchases.keySet().stream()
 				.mapToInt(Integer::intValue)
 				.summaryStatistics();
-			return Range.closed(summary.getMin(), summary.getMax());
+			return new Range(summary.getMin(), summary.getMax());
 		});
 	}
 

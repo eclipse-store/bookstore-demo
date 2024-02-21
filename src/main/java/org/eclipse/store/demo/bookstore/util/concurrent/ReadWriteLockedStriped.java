@@ -1,23 +1,14 @@
 package org.eclipse.store.demo.bookstore.util.concurrent;
 
-/*-
- * #%L
- * EclipseStore BookStore Demo
- * %%
- * Copyright (C) 2023 MicroStream Software
- * %%
- * This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License 2.0
- * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
- * SPDX-License-Identifier: EPL-2.0
- * #L%
- */
-
+import java.lang.ref.Reference;
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Supplier;
 
-import com.google.common.util.concurrent.Striped;
 
 /**
  * Facility to execute operations with striped read and write locks.
@@ -32,134 +23,156 @@ import com.google.common.util.concurrent.Striped;
  */
 public class ReadWriteLockedStriped
 {
+	private record LockHolder(int key, ReentrantReadWriteLock lock)
+	{
+	}
+	
 	/*
 	 * Transient means it is not persisted by EclipseStore, but created on demand.
 	 */
-	private transient volatile Striped<ReadWriteLock> stripes;
+	private transient volatile int                                                   stripeCount;
+	private transient volatile ReferenceQueue<LockHolder>                            queue;
+	private transient volatile ConcurrentHashMap<Integer, WeakReference<LockHolder>> locks;
 
 	public ReadWriteLockedStriped()
 	{
 		super();
 	}
 	
-	private Striped<ReadWriteLock> stripes()
+	/**
+	 * Executes an operation protected by a read lock for a given key.
+	 *
+	 * @param <T> the operation's return type
+	 * @param key an arbitrary, non-null key
+	 * @param operation the operation to execute
+	 * @return the operation's result
+	 */
+	public final <T> T read(final Object key, final Supplier<T> operation)
+	{
+		this.ensureInitialized();
+		return this.execute(this.getLock(key).readLock(), operation);
+	}
+
+	/**
+	 * Executes an operation protected by a read lock for a given key.
+	 *
+	 * @param key an arbitrary, non-null key
+	 * @param operation the operation to execute
+	 */
+	public final void read(final Object key, final Runnable operation)
+	{
+		this.ensureInitialized();
+		this.execute(this.getLock(key).readLock(), operation);
+	}
+
+	/**
+	 * Executes an operation protected by a write lock for a given key.
+	 *
+	 * @param <T> the operation's return type
+	 * @param key an arbitrary, non-null key
+	 * @param operation the operation to execute
+	 * @return the operation's result
+	 */
+	public final <T> T write(final Object key, final Supplier<T> operation)
+	{
+		this.ensureInitialized();
+		return this.execute(this.getLock(key).writeLock(), operation);
+	}
+
+	/**
+	 * Executes an operation protected by a write lock for a given key.
+	 *
+	 * @param key an arbitrary, non-null key
+	 * @param operation the operation to execute
+	 */
+	public final void write(final Object key, final Runnable operation)
+	{
+		this.ensureInitialized();
+		this.execute(this.getLock(key).writeLock(), operation);
+	}
+	
+	private void ensureInitialized()
 	{
 		/*
 		 * Double-checked locking to reduce the overhead of acquiring a lock
 		 * by testing the locking criterion.
 		 * The field (this.delegate) has to be volatile.
 		 */
-		Striped<ReadWriteLock> stripes = this.stripes;
-		if(stripes == null)
+		ReferenceQueue<LockHolder> queue = this.queue;
+		if(queue == null)
 		{
 			synchronized(this)
 			{
-				if((stripes = this.stripes) == null)
+				if((queue = this.queue) == null)
 				{
-					stripes = this.stripes = Striped.lazyWeakReadWriteLock(4);
+					this.stripeCount = 4;
+					this.queue       = new ReferenceQueue<>();
+					this.locks       = new ConcurrentHashMap<>();
 				}
 			}
 		}
-		return stripes;
 	}
 	
-	/**
-	 * Executes an operation protected by a read lock for a given key.
-	 *
-	 * @param <T> the operation's return type
-	 * @param key an arbitrary, non-null key
-	 * @param operation the operation to execute
-	 * @return the operation's result
-	 */
-	public final <T> T read(
-		final Object            key      ,
-		final ValueOperation<T> operation
-		)
+	private ReentrantReadWriteLock getLock(final Object keyObject)
 	{
-		final Lock readLock = this.stripes().get(key).readLock();
-		readLock.lock();
-
+		Objects.requireNonNull(keyObject, "keyObject can't be null");
+		final int key = keyObject.hashCode() % this.stripeCount;
+		return this.locks.compute(
+			key,
+			(i, currentReference) ->
+			{
+				if(currentReference == null)
+				{
+					return new WeakReference<>(new LockHolder(key, new ReentrantReadWriteLock()), this.queue);
+				}
+				final var lockHolder = currentReference.get();
+				if(lockHolder == null)
+				{
+					return new WeakReference<>(new LockHolder(key, new ReentrantReadWriteLock()), this.queue);
+				}
+				return currentReference;
+			}
+		).get().lock();
+	}
+	
+	private <T> T execute(final Lock theLock, final Supplier<T> operation)
+	{
+		theLock.lock();
 		try
 		{
-			return operation.execute();
+			return operation.get();
 		}
 		finally
 		{
-			readLock.unlock();
+			theLock.unlock();
+			this.purgeStaleLocks();
 		}
 	}
-
-	/**
-	 * Executes an operation protected by a read lock for a given key.
-	 *
-	 * @param key an arbitrary, non-null key
-	 * @param operation the operation to execute
-	 */
-	public final void read(
-		final Object        key      ,
-		final VoidOperation operation
-	)
+	
+	private void execute(final Lock theLock, final Runnable operation)
 	{
-		final Lock readLock = this.stripes().get(key).readLock();
-		readLock.lock();
-
+		theLock.lock();
 		try
 		{
-			operation.execute();
+			operation.run();
 		}
 		finally
 		{
-			readLock.unlock();
+			theLock.unlock();
+			this.purgeStaleLocks();
 		}
 	}
-
-	/**
-	 * Executes an operation protected by a write lock for a given key.
-	 *
-	 * @param <T> the operation's return type
-	 * @param key an arbitrary, non-null key
-	 * @param operation the operation to execute
-	 * @return the operation's result
-	 */
-	public final <T> T write(
-		final Object            key      ,
-		final ValueOperation<T> operation
-	)
+	
+	@SuppressWarnings("unchecked")
+	private void purgeStaleLocks()
 	{
-		final Lock writeLock = this.stripes().get(key).writeLock();
-		writeLock.lock();
-
-		try
+		Reference<LockHolder> reference;
+		while((reference = (Reference<LockHolder>)this.queue.poll()) != null)
 		{
-			return operation.execute();
-		}
-		finally
-		{
-			writeLock.unlock();
-		}
-	}
-
-	/**
-	 * Executes an operation protected by a write lock for a given key.
-	 *
-	 * @param key an arbitrary, non-null key
-	 * @param operation the operation to execute
-	 */
-	public final void write(
-		final Object        key      ,
-		final VoidOperation operation
-	)
-	{
-		final Lock writeLock = this.stripes().get(key).writeLock();
-		writeLock.lock();
-
-		try
-		{
-			operation.execute();
-		}
-		finally
-		{
-			writeLock.unlock();
+			synchronized(this.queue)
+			{
+				this.locks.remove(reference.get().key());
+			}
 		}
 	}
 
