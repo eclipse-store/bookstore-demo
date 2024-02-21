@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 
 import javax.money.MonetaryAmount;
 
-import org.eclipse.serializer.persistence.types.Persister;
+import org.eclipse.serializer.persistence.types.PersistenceStoring;
 import org.eclipse.serializer.reference.Lazy;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
@@ -85,8 +85,8 @@ public class Purchases extends ReadWriteLockedStriped
 		 * @param purchase the purchase to add
 		 */
 		YearlyPurchases add(
-			final Purchase purchase,
-			final Persister persister
+			final Purchase           purchase,
+			final PersistenceStoring persister
 		)
 		{
 			final List<Object> changedObjects = new ArrayList<>();
@@ -229,8 +229,8 @@ public class Purchases extends ReadWriteLockedStriped
 	 */
 	Set<Customer> init(
 		final int year,
-		final List<Purchase> purchases,
-		final Persister persister
+		final List<Purchase>     purchases,
+		final PersistenceStoring persister
 	)
 	{
 		return this.write(year, () ->
@@ -272,8 +272,8 @@ public class Purchases extends ReadWriteLockedStriped
 	 * @see #add(Purchase)
 	 */
 	public void add(
-		final Purchase  purchase ,
-		final Persister persister
+		final Purchase           purchase ,
+		final PersistenceStoring persister
 	)
 	{
 		final Integer year = purchase.timestamp().getYear();

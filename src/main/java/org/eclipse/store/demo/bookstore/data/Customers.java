@@ -23,7 +23,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.serializer.persistence.types.Persister;
+import org.eclipse.serializer.persistence.types.PersistenceStoring;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
@@ -70,8 +70,8 @@ public class Customers extends ReadWriteLocked
 	 * @see #add(Customer)
 	 */
 	public void add(
-		final Customer  customer ,
-		final Persister persister
+		final Customer           customer ,
+		final PersistenceStoring persister
 	)
 	{
 		this.write(() -> {
@@ -101,7 +101,7 @@ public class Customers extends ReadWriteLocked
 	 */
 	public void addAll(
 		final Collection<? extends Customer> customers,
-		final Persister                      persister
+		final PersistenceStoring             persister
 	)
 	{
 		this.write(() -> {

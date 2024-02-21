@@ -30,7 +30,7 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.QueryBuilder;
-import org.eclipse.serializer.persistence.types.Persister;
+import org.eclipse.serializer.persistence.types.PersistenceStoring;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.demo.bookstore.data.Index.DocumentPopulator;
 import org.eclipse.store.demo.bookstore.data.Index.EntityMatcher;
@@ -92,8 +92,8 @@ public class Books extends ReadWriteLocked
 	 * @see #add(Book)
 	 */
 	public void add(
-		final Book      book     ,
-		final Persister persister
+		final Book               book     ,
+		final PersistenceStoring persister
 	)
 	{
 		this.write(() ->
@@ -124,8 +124,8 @@ public class Books extends ReadWriteLocked
 	 * @see #addAll(Collection)
 	 */
 	public void addAll(
-		final Collection<? extends Book> books    ,
-		final Persister                  persister
+		final Collection<? extends Book>          books    ,
+		final PersistenceStoring                  persister
 	)
 	{
 		this.write(() ->
@@ -141,7 +141,7 @@ public class Books extends ReadWriteLocked
 	 *
 	 * @param persister the EclipseStore persister used to store the objects
 	 */
-	private void storeCollections(final Persister persister)
+	private void storeCollections(final PersistenceStoring persister)
 	{
 		persister.storeAll(
 			this.isbn13ToBook    ,
