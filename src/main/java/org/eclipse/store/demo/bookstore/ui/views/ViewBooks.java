@@ -1,5 +1,11 @@
 package org.eclipse.store.demo.bookstore.ui.views;
 
+import java.util.stream.Stream;
+
+import org.eclipse.store.demo.bookstore.BookStoreDemo;
+import org.eclipse.store.demo.bookstore.data.Book;
+import org.eclipse.store.demo.bookstore.data.Books;
+
 /*-
  * #%L
  * EclipseStore BookStore Demo
@@ -20,18 +26,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.router.Route;
 
-import java.util.stream.Stream;
-
-import org.eclipse.store.demo.bookstore.BookStoreDemo;
-import org.eclipse.store.demo.bookstore.data.Book;
-import org.eclipse.store.demo.bookstore.data.Books;
-
 /**
  * View to display and modify {@link Books}.
  *
  */
 @Route(value = "books", layout = RootLayout.class)
-@SuppressWarnings("serial")
 public class ViewBooks extends ViewEntity<Book>
 {
 	public ViewBooks()
@@ -71,7 +70,7 @@ public class ViewBooks extends ViewEntity<Book>
 
 	private void showInventory(final Book book)
 	{
-		getUI().get().navigate(ViewInventory.class).get().filterBy(book);
+		this.getUI().get().navigate(ViewInventory.class).get().filterBy(book);
 	}
 
 	private void openCreateBookDialog()
@@ -79,14 +78,14 @@ public class ViewBooks extends ViewEntity<Book>
 		DialogBookCreate.open(book ->
 		{
 			BookStoreDemo.getInstance().data().books().add(book);
-			listEntities();
+			this.listEntities();
 		});
 	}
 
 
 
 	@Override
-	public <R> R compute(SerializableFunction<Stream<Book>, R> function) {
+	public <R> R compute(final SerializableFunction<Stream<Book>, R> function) {
 		return BookStoreDemo.getInstance().data().books().compute(function);
 	}
 }

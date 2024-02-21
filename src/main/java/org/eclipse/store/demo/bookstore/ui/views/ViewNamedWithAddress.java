@@ -23,7 +23,6 @@ import com.vaadin.flow.component.grid.Grid;
  *
  * @param <E> the entity type
  */
-@SuppressWarnings("serial")
 public abstract class ViewNamedWithAddress<E extends NamedWithAddress> extends ViewNamed<E>
 {
 	protected ViewNamedWithAddress()

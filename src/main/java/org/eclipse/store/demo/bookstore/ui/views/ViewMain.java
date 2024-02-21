@@ -25,7 +25,6 @@ import com.vaadin.flow.router.Route;
  *
  */
 @Route(value = "", layout = RootLayout.class)
-@SuppressWarnings("serial")
 public class ViewMain extends VerticalLayout
 {
 	public ViewMain(

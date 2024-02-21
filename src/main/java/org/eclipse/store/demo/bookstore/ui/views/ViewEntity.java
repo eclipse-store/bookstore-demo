@@ -99,7 +99,7 @@ public abstract class ViewEntity<E> extends VerticalLayout
 						.limit(q.getLimit());
 			});
 		});
-		this.filterFields.forEach(f -> f.updateOptions());
+		this.filterFields.forEach(FilterField::updateOptions);
 	}
 	
 	protected abstract void createUI();

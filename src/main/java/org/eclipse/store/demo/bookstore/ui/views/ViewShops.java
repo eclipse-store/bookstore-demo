@@ -1,5 +1,12 @@
 package org.eclipse.store.demo.bookstore.ui.views;
 
+import java.util.stream.Stream;
+
+import org.eclipse.store.demo.bookstore.BookStoreDemo;
+import org.eclipse.store.demo.bookstore.data.Shop;
+import org.eclipse.store.demo.bookstore.data.Shops;
+import org.vaadin.lineawesome.LineAwesomeIcon;
+
 /*-
  * #%L
  * EclipseStore BookStore Demo
@@ -20,19 +27,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.router.Route;
 
-import org.eclipse.store.demo.bookstore.BookStoreDemo;
-import org.eclipse.store.demo.bookstore.data.Shop;
-import org.eclipse.store.demo.bookstore.data.Shops;
-import org.vaadin.lineawesome.LineAwesomeIcon;
-
-import java.util.stream.Stream;
-
 /**
  * View to display {@link Shops}.
  *
  */
 @Route(value = "shops", layout = RootLayout.class)
-@SuppressWarnings("serial")
 public class ViewShops extends ViewNamedWithAddress<Shop>
 {
 	public ViewShops()
@@ -70,16 +69,16 @@ public class ViewShops extends ViewNamedWithAddress<Shop>
 
 	private void showInventory(final Shop shop)
 	{
-		getUI().get().navigate(ViewInventory.class).get().filterBy(shop);
+		this.getUI().get().navigate(ViewInventory.class).get().filterBy(shop);
 	}
 
 	private void showPurchases(final Shop shop)
 	{
-		getUI().get().navigate(ViewPurchases.class).get().filterBy(shop);
+		this.getUI().get().navigate(ViewPurchases.class).get().filterBy(shop);
 	}
 
 	@Override
-	public <R> R compute(SerializableFunction<Stream<Shop>, R> function) {
+	public <R> R compute(final SerializableFunction<Stream<Shop>, R> function) {
 		return BookStoreDemo.getInstance().data().shops().compute(function);
 	}
 
