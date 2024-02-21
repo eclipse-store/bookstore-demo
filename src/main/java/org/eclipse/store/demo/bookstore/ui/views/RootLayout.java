@@ -1,5 +1,10 @@
 package org.eclipse.store.demo.bookstore.ui.views;
 
+import org.vaadin.lineawesome.LineAwesomeIcon;
+
+import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.applayout.DrawerToggle;
+
 /*-
  * #%L
  * EclipseStore BookStore Demo
@@ -15,11 +20,6 @@ package org.eclipse.store.demo.bookstore.ui.views;
  */
 
 import com.vaadin.flow.component.dependency.StyleSheet;
-import org.vaadin.lineawesome.LineAwesomeIcon;
-
-import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Image;
