@@ -1,5 +1,5 @@
 {
-  bestSellerListByCountry(year: 2020, country: "us") {
+  bestSellerListByCountry(year: 2024, country: "us") {
     book {
       title
     }

@@ -1,5 +1,5 @@
 {
-  bestSellerList(year: 2020) {
+  bestSellerList(year: 2024) {
     book {
       title
     }
