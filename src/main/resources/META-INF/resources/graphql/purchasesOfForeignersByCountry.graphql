@@ -1,5 +1,5 @@
 {
-  purchasesOfForeignersByCountry(year: 2020, country: "us") { 
+  purchasesOfForeignersByCountry(year: 2024, country: "us") { 
     total,
     shop {
       name,
