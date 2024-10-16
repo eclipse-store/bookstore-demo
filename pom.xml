@@ -74,6 +74,11 @@
 			<version>${eclipsestore.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>one.microstream</groupId>
+			<artifactId>gigamap</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.javamoney.moneta</groupId>
 			<artifactId>moneta-core</artifactId>
 			<version>1.4.2</version>
