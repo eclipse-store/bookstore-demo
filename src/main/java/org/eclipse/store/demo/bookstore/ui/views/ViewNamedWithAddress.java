@@ -32,11 +32,11 @@ public abstract class ViewNamedWithAddress<E extends NamedWithAddress> extends V
 
 	protected void addGridColumnsForAddress()
 	{
-		this.addGridColumnWithTextFilter   ("address1", e -> e.address().address()               );
-		this.addGridColumnWithTextFilter   ("address2", e -> e.address().address2()              );
-		this.addGridColumnWithTextFilter   ("zipcode",  e -> e.address().zipCode()               );
-		this.addGridColumnWithDynamicFilter("city",     e -> e.address().city()                  );
-		this.addGridColumnWithDynamicFilter("state",    e -> e.address().city().state()          );
-		this.addGridColumnWithDynamicFilter("country",  e -> e.address().city().state().country());
+		this.addGridColumnWithTextFilter   ("address1", e -> e.address().address()               , NamedWithAddress.address1Index::containsIgnoreCase);
+		this.addGridColumnWithTextFilter   ("address2", e -> e.address().address2()              , NamedWithAddress.address2Index::containsIgnoreCase);
+		this.addGridColumnWithTextFilter   ("zipcode",  e -> e.address().zipCode()               , NamedWithAddress.zipcodeIndex::containsIgnoreCase);
+		this.addGridColumnWithDynamicFilter("city",     e -> e.address().city()                  , NamedWithAddress.cityIndex::is);
+		this.addGridColumnWithDynamicFilter("state",    e -> e.address().city().state()          , NamedWithAddress.stateIndex::is);
+		this.addGridColumnWithDynamicFilter("country",  e -> e.address().city().state().country(), NamedWithAddress.countryIndex::is);
 	}
 }

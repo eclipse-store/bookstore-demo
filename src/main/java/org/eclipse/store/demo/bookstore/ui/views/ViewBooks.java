@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.demo.bookstore.data.Book;
 import org.eclipse.store.demo.bookstore.data.Books;
+import org.eclipse.store.demo.bookstore.data.Named;
 
 /*-
  * #%L
@@ -22,9 +23,10 @@ import org.eclipse.store.demo.bookstore.data.Books;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.router.Route;
+
+import one.microstream.gigamap.Condition;
 
 /**
  * View to display and modify {@link Books}.
@@ -41,23 +43,12 @@ public class ViewBooks extends ViewEntity<Book>
 	@Override
 	protected void createUI()
 	{
-		this.addGridColumnWithTextFilter   ("title"    , Book::title    );
-		this.addGridColumnWithDynamicFilter("author"   , Book::author   );
-		this.addGridColumnWithDynamicFilter("genre"    , Book::genre    );
-		this.addGridColumnWithDynamicFilter("publisher", Book::publisher);
-		this.addGridColumnWithDynamicFilter("language" , Book::language );
-		this.addGridColumnWithTextFilter   ("isbn13"   , Book::isbn13   );
-
-		final Button showInventoryButton = new Button(
-			this.getTranslation("showInventory"),
-			VaadinIcon.STOCK.create(),
-			event -> this.showInventory(this.getSelectedEntity())
-		);
-		showInventoryButton.setEnabled(false);
-		this.grid.addSelectionListener(event -> {
-			final boolean b = event.getFirstSelectedItem().isPresent();
-			showInventoryButton.setEnabled(b);
-		});
+		this.addGridColumnWithTextFilter   ("title"    , Book::title    , Named.nameIndex::containsIgnoreCase);
+		this.addGridColumnWithDynamicFilter("author"   , Book::author   , Book.authorIndex::is);
+		this.addGridColumnWithDynamicFilter("genre"    , Book::genre    , Book.genreIndex::is);
+		this.addGridColumnWithDynamicFilter("publisher", Book::publisher, Book.publisherIndex::is);
+		this.addGridColumnWithDynamicFilter("language" , Book::language , Book.languageIndex::is);
+		this.addGridColumnWithTextFilter   ("isbn13"   , Book::isbn13   , Book.isbn13Index::containsIgnoreCase);
 
 		final Button createBookButton = new Button(
 			this.getTranslation("createBook"),
@@ -65,12 +56,7 @@ public class ViewBooks extends ViewEntity<Book>
 			event -> this.openCreateBookDialog()
 		);
 
-		this.add(new HorizontalLayout(showInventoryButton, createBookButton));
-	}
-
-	private void showInventory(final Book book)
-	{
-		this.getUI().get().navigate(ViewInventory.class).get().filterBy(book);
+		this.add(createBookButton);
 	}
 
 	private void openCreateBookDialog()
@@ -82,10 +68,14 @@ public class ViewBooks extends ViewEntity<Book>
 		});
 	}
 
-
-
 	@Override
-	public <R> R compute(final SerializableFunction<Stream<Book>, R> function) {
-		return BookStoreDemo.getInstance().data().books().compute(function);
+	public <R> R compute(
+		final Condition<Book>                       condition,
+		final int                                   offset,
+		final int                                   limit,
+		final SerializableFunction<Stream<Book>, R> function
+	)
+	{
+		return BookStoreDemo.getInstance().data().books().compute(condition, offset, limit, function);
 	}
 }

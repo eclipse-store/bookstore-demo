@@ -25,6 +25,8 @@ import java.util.stream.Stream;
 
 import javax.money.MonetaryAmount;
 
+import one.microstream.gigamap.Indexer;
+
 /**
  * Purchase entity which holds a {@link Shop}, {@link Employee},
  * {@link Customer}, timestamp and {@link PurchaseItem}s.
@@ -34,6 +36,85 @@ import javax.money.MonetaryAmount;
  */
 public class Purchase
 {
+	public static final Indexer.AbstractInteger<Purchase> yearIndex = new Indexer.AbstractInteger<>()
+	{
+		@Override
+		public Integer indexEntity(final Purchase entity)
+		{
+			return entity.timestamp().getYear();
+		}
+	};
+	
+	public static final Indexer.AbstractBoolean<Purchase> foreignIndex = new Indexer.AbstractBoolean<>()
+	{
+		@Override
+		public Boolean indexEntity(final Purchase entity)
+		{
+			return entity.customer().address().city() != entity.shop().address().city();
+		}
+	};
+	
+	public static final Indexer.Abstract<Purchase, Shop> shopIndex = new Indexer.Abstract<>()
+	{
+		@Override
+		public Class<Shop> keyType()
+		{
+			return Shop.class;
+		}
+		
+		@Override
+		public Shop indexEntity(final Purchase entity)
+		{
+			return entity.shop();
+		}
+	};
+	
+	public static final Indexer.Abstract<Purchase, Country> shopCountryIndex = new Indexer.Abstract<>()
+	{
+		@Override
+		public Class<Country> keyType()
+		{
+			return Country.class;
+		}
+		
+		@Override
+		public Country indexEntity(final Purchase entity)
+		{
+			return entity.shop().address().city().state().country();
+		}
+	};
+	
+	public static final Indexer.Abstract<Purchase, Employee> employeeIndex = new Indexer.Abstract<>()
+	{
+		@Override
+		public Class<Employee> keyType()
+		{
+			return Employee.class;
+		}
+		
+		@Override
+		public Employee indexEntity(final Purchase entity)
+		{
+			return entity.employee();
+		}
+	};
+	
+	public static final Indexer.Abstract<Purchase, Customer> customerIndex = new Indexer.Abstract<>()
+	{
+		@Override
+		public Class<Customer> keyType()
+		{
+			return Customer.class;
+		}
+		
+		@Override
+		public Customer indexEntity(final Purchase entity)
+		{
+			return entity.customer();
+		}
+	};
+	
+	
 	private final Shop               shop     ;
 	private final Employee           employee ;
 	private final Customer           customer ;

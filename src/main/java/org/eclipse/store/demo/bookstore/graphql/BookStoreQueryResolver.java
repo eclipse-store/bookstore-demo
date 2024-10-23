@@ -41,13 +41,7 @@ public class BookStoreQueryResolver implements GraphQLQueryResolver
 
 	private Country countryByCode(final String countryCode)
 	{
-		return this.bookStoreDemo.data().shops().compute(shops ->
-			shops
-				.map(s -> s.address().city().state().country())
-				.filter(c -> c.code().equalsIgnoreCase(countryCode))
-				.findAny()
-				.orElse(null)
-		);
+		return this.bookStoreDemo.data().shops().countryByCode(countryCode);
 	}
 
 	public List<Book> booksByTitle(final String title)

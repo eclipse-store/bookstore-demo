@@ -26,6 +26,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.router.Route;
 
+import one.microstream.gigamap.Condition;
+
 /**
  * View to display {@link Customers}.
  *
@@ -61,8 +63,14 @@ public class ViewCustomers extends ViewNamedWithAddress<Customer>
 	}
 
 	@Override
-	public <R> R compute(final SerializableFunction<Stream<Customer>, R> function) {
-		return BookStoreDemo.getInstance().data().customers().compute(function);
+	public <R> R compute(
+		final Condition<Customer>                       condition,
+		final int                                       offset,
+		final int                                       limit,
+		final SerializableFunction<Stream<Customer>, R> function
+	)
+	{
+		return BookStoreDemo.getInstance().data().customers().compute(condition, offset, limit, function);
 	}
 
 	private void showPurchases(final Customer customer)

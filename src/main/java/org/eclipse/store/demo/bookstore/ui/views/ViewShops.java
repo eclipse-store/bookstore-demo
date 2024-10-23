@@ -22,10 +22,10 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
  */
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.router.Route;
+
+import one.microstream.gigamap.Condition;
 
 /**
  * View to display {@link Shops}.
@@ -45,31 +45,19 @@ public class ViewShops extends ViewNamedWithAddress<Shop>
 		this.addGridColumnForName();
 		this.addGridColumnsForAddress();
 
-		final Button showInventoryButton = new Button(
-			this.getTranslation("showInventory"),
-			VaadinIcon.STOCK.create(),
-			event -> this.showInventory(this.getSelectedEntity())
-		);
 		final Button showPurchasesButton = new Button(
 			this.getTranslation("showPurchases"),
 			LineAwesomeIcon.SHOPPING_CART_SOLID.create(),
 			event -> this.showPurchases(this.getSelectedEntity())
 		);
 
-		showInventoryButton.setEnabled(false);
 		showPurchasesButton.setEnabled(false);
 		this.grid.addSelectionListener(event -> {
 			final boolean b = event.getFirstSelectedItem().isPresent();
-			showInventoryButton.setEnabled(b);
 			showPurchasesButton.setEnabled(b);
 		});
 
-		this.add(new HorizontalLayout(showInventoryButton, showPurchasesButton));
-	}
-
-	private void showInventory(final Shop shop)
-	{
-		this.getUI().get().navigate(ViewInventory.class).get().filterBy(shop);
+		this.add(showPurchasesButton);
 	}
 
 	private void showPurchases(final Shop shop)
@@ -78,8 +66,14 @@ public class ViewShops extends ViewNamedWithAddress<Shop>
 	}
 
 	@Override
-	public <R> R compute(final SerializableFunction<Stream<Shop>, R> function) {
-		return BookStoreDemo.getInstance().data().shops().compute(function);
+	public <R> R compute(
+		final Condition<Shop>                       condition,
+		final int                                   offset,
+		final int                                   limit,
+		final SerializableFunction<Stream<Shop>, R> function
+	)
+	{
+		return BookStoreDemo.getInstance().data().shops().compute(condition, offset, limit, function);
 	}
 
 }

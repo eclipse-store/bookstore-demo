@@ -23,7 +23,6 @@ import com.vaadin.flow.component.grid.Grid;
  *
  * @param <E> the entity type
  */
-@SuppressWarnings("serial")
 public abstract class ViewNamed<E extends Named> extends ViewEntity<E>
 {
 	protected ViewNamed()
@@ -33,6 +32,6 @@ public abstract class ViewNamed<E extends Named> extends ViewEntity<E>
 
 	protected void addGridColumnForName()
 	{
-		this.addGridColumnWithTextFilter("name", Named::name);
+		this.addGridColumnWithTextFilter("name", Named::name, Named.nameIndex::containsIgnoreCase);
 	}
 }

@@ -14,9 +14,7 @@ package org.eclipse.store.demo.bookstore.data;
  * #L%
  */
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -24,6 +22,10 @@ import org.eclipse.serializer.persistence.types.PersistenceStoring;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
+
+import one.microstream.gigamap.Condition;
+import one.microstream.gigamap.GigaMap;
+import one.microstream.gigamap.GigaQuery;
 
 /**
  * All retail shops operated by this company.
@@ -37,10 +39,15 @@ import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
  */
 public class Shops extends ReadWriteLocked
 {
-	/**
-	 * Simple list to hold the shops.
-	 */
-	private final List<Shop> shops = new ArrayList<>(1024);
+	private final GigaMap<Shop> map = GigaMap.<Shop>Builder()
+		.withBitmapIndex(Named.nameIndex)
+		.withBitmapIndex(NamedWithAddress.address1Index)
+		.withBitmapIndex(NamedWithAddress.address2Index)
+		.withBitmapIndex(NamedWithAddress.zipcodeIndex)
+		.withBitmapIndex(NamedWithAddress.cityIndex)
+		.withBitmapIndex(NamedWithAddress.stateIndex)
+		.withBitmapIndex(NamedWithAddress.countryIndex)
+		.build();
 
 	public Shops()
 	{
@@ -56,7 +63,11 @@ public class Shops extends ReadWriteLocked
 	 */
 	public void add(final Shop shop)
 	{
-		this.add(shop, BookStoreDemo.getInstance().storageManager());
+		this.write(() ->
+		{
+			this.map.add(shop);
+			this.map.store();
+		});
 	}
 
 	/**
@@ -71,9 +82,10 @@ public class Shops extends ReadWriteLocked
 		final PersistenceStoring persister
 	)
 	{
-		this.write(() -> {
-			this.shops.add(shop);
-			persister.store(this.shops);
+		this.write(() ->
+		{
+			this.map.add(shop);
+			persister.store(this.map);
 		});
 	}
 
@@ -86,7 +98,11 @@ public class Shops extends ReadWriteLocked
 	 */
 	public void addAll(final Collection<? extends Shop> shops)
 	{
-		this.addAll(shops, BookStoreDemo.getInstance().storageManager());
+		this.write(() ->
+		{
+			this.map.addAll(shops);
+			this.map.store();
+		});
 	}
 
 	/**
@@ -101,9 +117,10 @@ public class Shops extends ReadWriteLocked
 		final PersistenceStoring         persister
 	)
 	{
-		this.write(() -> {
-			this.shops.addAll(shops);
-			persister.store(this.shops);
+		this.write(() ->
+		{
+			this.map.addAll(shops);
+			persister.store(this.map);
 		});
 	}
 
@@ -114,21 +131,8 @@ public class Shops extends ReadWriteLocked
 	 */
 	public int shopCount()
 	{
-		return this.read(
-			this.shops::size
-		);
-	}
-
-	/**
-	 * Gets all shops as a {@link List}.
-	 * Modifications to the returned list are not reflected to the backed data.
-	 *
-	 * @return all shops
-	 */
-	public List<Shop> all()
-	{
 		return this.read(() ->
-			new ArrayList<>(this.shops)
+			(int)this.map.size()
 		);
 	}
 
@@ -141,43 +145,7 @@ public class Shops extends ReadWriteLocked
 	public void clear()
 	{
 		this.write(() ->
-			this.shops.forEach(Shop::clear)
-		);
-	}
-
-	/**
-	 * Executes a function with a {@link Stream} of {@link Shop}s and returns the computed value.
-	 *
-	 * @param <T> the return type
-	 * @param streamFunction computing function
-	 * @return the computed result
-	 */
-	public <T> T compute(final Function<Stream<Shop>, T> streamFunction)
-	{
-		return this.read(() ->
-			streamFunction.apply(
-				this.shops.parallelStream()
-			)
-		);
-	}
-
-	/**
-	 * Executes a function with a {@link Stream} of {@link InventoryItem}s and returns the computed value.
-	 *
-	 * @param <T> the return type
-	 * @param streamFunction computing function
-	 * @return the computed result
-	 */
-	public <T> T computeInventory(final Function<Stream<InventoryItem>, T> function)
-	{
-		return this.read(() ->
-			function.apply(
-				this.shops.parallelStream().flatMap(shop ->
-					shop.inventory().compute(entries ->
-						entries.map(entry -> new InventoryItem(shop, entry.getKey(), entry.getValue()))
-					)
-				)
-			)
+			this.map.forEach(Shop::clear)
 		);
 	}
 
@@ -190,11 +158,39 @@ public class Shops extends ReadWriteLocked
 	public Shop ofName(final String name)
 	{
 		return this.read(() ->
-			this.shops.stream()
-				.filter(shop -> shop.name().equals(name))
+			this.map.query(Named.nameIndex.is(name))
+				.findFirst()
+				.orElse(null)
+		);
+	}
+	
+	public Country countryByCode(final String code)
+	{
+		return this.read(() ->
+			NamedWithAddress.countryIndex.resolveKeys(this.map)
+				.stream()
+				.filter(c -> c.code().equals(code))
 				.findAny()
 				.orElse(null)
 		);
+	}
+	
+	public <R> R compute(
+		final Condition<Shop>           condition,
+		final int                       offset,
+		final int                       limit,
+		final Function<Stream<Shop>, R> function
+	)
+	{
+		return this.read(() ->
+		{
+			GigaQuery<Shop> query = this.map.query();
+			if(condition != null)
+			{
+				query = query.and(condition);
+			}
+			return function.apply(query.toList(offset, limit).stream());
+		});
 	}
 
 }

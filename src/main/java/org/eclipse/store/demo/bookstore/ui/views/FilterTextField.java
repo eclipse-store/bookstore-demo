@@ -19,7 +19,8 @@ import static org.eclipse.serializer.util.X.notNull;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.function.SerializableFunction;
-import com.vaadin.flow.function.SerializablePredicate;
+
+import one.microstream.gigamap.Condition;
 
 /**
  * Filter {@link TextField} for arbitrary entities.
@@ -28,15 +29,15 @@ import com.vaadin.flow.function.SerializablePredicate;
  */
 public class FilterTextField<E> extends TextField implements FilterField<E, String>
 {
-	private final SerializableFunction<String, SerializablePredicate<E>> filterFactory;
+	private final SerializableFunction<String, Condition<E>> conditionFactory;
 
 	public FilterTextField(
-		final SerializableFunction<String, SerializablePredicate<E>> filterFactory
+		final SerializableFunction<String, Condition<E>> conditionFactory
 	)
 	{
 		super();
 
-		this.filterFactory = notNull(filterFactory);
+		this.conditionFactory = notNull(conditionFactory);
 
 		this.setPlaceholder(this.getTranslation("filter"));
 		this.setClearButtonVisible(true);
@@ -44,12 +45,12 @@ public class FilterTextField<E> extends TextField implements FilterField<E, Stri
 	}
 
 	@Override
-	public SerializablePredicate<E> filter(final SerializablePredicate<E> filter)
+	public Condition<E> condition()
 	{
 		String value = this.getValue();
 		return value != null && (value = value.trim()).length() > 0
-			? filter.and(this.filterFactory.apply(value))
-			: filter
+			? this.conditionFactory.apply(value)
+			: null
 		;
 	}
 

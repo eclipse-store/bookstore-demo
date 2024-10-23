@@ -174,7 +174,7 @@ public final class BookStoreDemo implements HasLogger
 		this.logger().info("Initializing EclipseStore StorageManager");
 		
 		final EmbeddedStorageFoundation<?> foundation = EmbeddedStorageConfiguration.Builder()
-			.setStorageDirectory("data/storage")
+			.setStorageDirectory("data/storage-with-gigamap")
 			.setChannelCount(Math.max(
 				1, // minimum one channel, if only 1 core is available
 				Integer.highestOneBit(Runtime.getRuntime().availableProcessors() - 1)

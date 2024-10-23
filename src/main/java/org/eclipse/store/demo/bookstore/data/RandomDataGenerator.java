@@ -15,7 +15,6 @@ package org.eclipse.store.demo.bookstore.data;
  */
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -352,17 +351,15 @@ public class RandomDataGenerator implements HasLogger
 		final int               nr
 	)
 	{
-		final String             name      = city.name() + " Shop " + nr;
-		final Address            address   = this.createAddress(city, countryData.faker);
-		final List<Employee>     employees = this.createEmployees(countryData, city);
-		final Map<Book, Integer> inventory = this.randomRange(this.dataAmount.maxBooksPerShop())
+		final String              name           = city.name() + " Shop " + nr;
+		final Address             address        = this.createAddress(city, countryData.faker);
+		final List<Employee>      employees      = this.createEmployees(countryData, city);
+		final List<InventoryItem> inventoryItems = this.randomRange(this.dataAmount.maxBooksPerShop())
 			.mapToObj(i -> this.randomBook())
 			.distinct()
-			.collect(toMap(
-				book -> book,
-				book -> this.random.nextInt(50) + 1
-			));
-		return new Shop(name, address, employees, new Inventory(inventory));
+			.map(b -> new InventoryItem(b, this.random.nextInt(50) + 1))
+			.collect(toList());
+		return new Shop(name, address, employees, new Inventory(inventoryItems));
 	}
 
 	private void createPurchases(final List<CountryData> countries)
@@ -395,7 +392,7 @@ public class RandomDataGenerator implements HasLogger
 			)
 			.collect(toList());
 
-		final Set<Customer> customersForYear = this.purchases.init(year, purchases, this.storageManager);
+		final Set<Customer> customersForYear = this.purchases.init(purchases, this.storageManager);
 
 		this.logger().info("+ " + purchases.size() + " purchases in " + year);
 

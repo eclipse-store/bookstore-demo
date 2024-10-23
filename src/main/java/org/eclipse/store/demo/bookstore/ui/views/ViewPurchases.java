@@ -1,19 +1,5 @@
 package org.eclipse.store.demo.bookstore.ui.views;
 
-/*-
- * #%L
- * EclipseStore BookStore Demo
- * %%
- * Copyright (C) 2023 MicroStream Software
- * %%
- * This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License 2.0
- * which is available at https://www.eclipse.org/legal/epl-2.0/
- * 
- * SPDX-License-Identifier: EPL-2.0
- * #L%
- */
-
 import static org.javamoney.moneta.function.MonetaryFunctions.summarizingMonetary;
 
 import java.time.Year;
@@ -37,6 +23,8 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.router.Route;
 
+import one.microstream.gigamap.Condition;
+
 /**
  * View to display {@link Purchases}.
  *
@@ -46,7 +34,7 @@ public class ViewPurchases extends ViewEntity<Purchase>
 {
 	int      year = Year.now().getValue();
 	Span    totalColumnFooter;
-	private FilterComboBox<Purchase, Shop> shopFilter;
+	private FilterComboBox<Purchase, Shop>     shopFilter;
 	private FilterComboBox<Purchase, Customer> customerFilter;
 
 	public ViewPurchases()
@@ -69,9 +57,9 @@ public class ViewPurchases extends ViewEntity<Purchase>
 	@Override
 	protected void createUI()
 	{
-		this.shopFilter = this.addGridColumnWithDynamicFilter("shop"     , Purchase::shop    );
-		this.addGridColumnWithDynamicFilter( "employee" , Purchase::employee                );
-		this.customerFilter = this.addGridColumnWithDynamicFilter("customer" , Purchase::customer);
+		this.shopFilter     = this.addGridColumnWithDynamicFilter("shop"     , Purchase::shop    , Purchase.shopIndex::is);
+		                      this.addGridColumnWithDynamicFilter("employee" , Purchase::employee, Purchase.employeeIndex::is);
+		this.customerFilter = this.addGridColumnWithDynamicFilter("customer" , Purchase::customer, Purchase.customerIndex::is);
 		this.addGridColumn                 ("timestamp", Purchase::timestamp               );
 		this.addGridColumn                 ("total"    , moneyRenderer(Purchase::total)    )
 			.setFooter(this.totalColumnFooter = new Span());
@@ -113,26 +101,40 @@ public class ViewPurchases extends ViewEntity<Purchase>
 		grid.setAllRowsVisible(true);
 		return grid;
 	}
+	
+	@Override
+	protected Condition<Purchase> getCondition()
+	{
+		final Condition<Purchase> condition = super.getCondition();
+		final Condition<Purchase> yearCondition = Purchase.yearIndex.is(this.year);
+		return condition != null
+			? condition.and(yearCondition)
+			: yearCondition
+		;
+	}
 
 	@Override
-	public <R> R compute(final SerializableFunction<Stream<Purchase>, R> function)
+	public <R> R compute(
+		final Condition<Purchase>                       condition,
+		final int                                       offset,
+		final int                                       limit,
+		final SerializableFunction<Stream<Purchase>, R> function
+	)
 	{
-		return BookStoreDemo.getInstance().data().purchases().computeByYear(
-			this.year,
-			function
-		);
+		return BookStoreDemo.getInstance().data().purchases().compute(condition, offset, limit, function);
 	}
 
 	@Override
 	public void listEntities() {
 		super.listEntities();
 		try {
-			final MonetarySummaryStatistics stats = this.compute(stream ->
-					stream.filter(this.getPredicate())
-							.map(Purchase::total)
-							.collect(summarizingMonetary(BookStoreDemo.CURRENCY_UNIT)));
+			final MonetarySummaryStatistics stats = this.compute(this.getCondition(), 0, Integer.MAX_VALUE, stream ->
+				stream.map(Purchase::total)
+					.collect(summarizingMonetary(BookStoreDemo.CURRENCY_UNIT))
+			);
 			this.totalColumnFooter.setText(
-					BookStoreDemo.MONETARY_AMOUNT_FORMAT.format(stats.getSum()));
+				BookStoreDemo.MONETARY_AMOUNT_FORMAT.format(stats.getSum())
+			);
 		} catch (final Exception e) {
 			// division by zero
 			this.totalColumnFooter.setText("-");

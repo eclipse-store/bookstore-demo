@@ -36,9 +36,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.function.SerializableFunction;
-import com.vaadin.flow.function.SerializablePredicate;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.BeforeEvent;
+
+import one.microstream.gigamap.Condition;
 
 /**
  * Abstract view to display entities in a {@link Grid}.
@@ -90,13 +91,11 @@ public abstract class ViewEntity<E> extends VerticalLayout
 			final var comparators = q.getSortOrders().stream().map(so ->
 					this.grid.getColumnByKey(so.getSorted()).getComparator(so.getDirection())
 			).collect(Collectors.toList());
-			return this.compute(stream -> {
-				stream = stream.filter(this.getPredicate());
+			return this.compute(this.getCondition(), q.getOffset(), q.getLimit(), stream -> {
 				for(final var c : comparators) {
 					stream = stream.sorted(c);
 				}
-				return stream.skip(q.getOffset())
-						.limit(q.getLimit());
+				return stream;
 			});
 		});
 		this.filterFields.forEach(FilterField::updateOptions);
@@ -105,16 +104,27 @@ public abstract class ViewEntity<E> extends VerticalLayout
 	protected abstract void createUI();
 
 
-	public abstract <R> R compute(SerializableFunction<Stream<E>, R> function);
+	public abstract <R> R compute(Condition<E> condition, int offset, int limit, SerializableFunction<Stream<E>, R> function);
 
-	protected final SerializablePredicate<E> getPredicate()
+	protected Condition<E> getCondition()
 	{
-		SerializablePredicate<E> filter = entity -> entity != null;
+		Condition<E> condition = null;
 		for(final FilterField<E, ?> filterField : this.filterFields)
 		{
-			filter = filterField.filter(filter);
+			final Condition<E> fieldCondition = filterField.condition();
+			if(fieldCondition != null)
+			{
+				if(condition == null)
+				{
+					condition = fieldCondition;
+				}
+				else
+				{
+					condition = condition.and(fieldCondition);
+				}
+			}
 		}
-		return filter;
+		return condition;
 	}
 
 	protected void gridDataUpdated()
@@ -193,11 +203,12 @@ public abstract class ViewEntity<E> extends VerticalLayout
 
 	protected Grid.Column<E> addGridColumnWithTextFilter(
 		final String colKey,
-		final ValueProvider<E, String> valueProvider
+		final ValueProvider<E, String> valueProvider,
+		final SerializableFunction<String, Condition<E>> conditionFactory
 	)
 	{
 		final FilterTextField<E> text = new FilterTextField<>(
-			value -> entity -> StringUtils.containsIgnoreCase(valueProvider.apply(entity), value)
+			conditionFactory
 		);
 		text.addValueChangeListener(event -> this.listEntities());
 		return this.addGridColumn(
@@ -209,20 +220,19 @@ public abstract class ViewEntity<E> extends VerticalLayout
 
 	protected <F extends Named> FilterComboBox<E, F> addGridColumnWithDynamicFilter(
 		final String title,
-		final ValueProvider<E, F> valueProvider
+		final ValueProvider<E, F> valueProvider,
+		final SerializableFunction<F, Condition<E>> conditionFactory
 	)
 	{
 		final FilterComboBox<E, F> combo = new FilterComboBox<>(
-			value -> entity -> valueProvider.apply(entity) == value
+			conditionFactory
 		);
 
 		combo.setItems(query -> {
-			return this.compute(s -> s.filter(this.getPredicate())
-					.map(valueProvider))
-					.distinct()
-					.filter(f -> StringUtils.containsIgnoreCase(f.name(), query.getFilter().get()))
-					.skip(query.getOffset())
-					.limit(query.getLimit());
+			return this.compute(this.getCondition(), query.getOffset(), query.getLimit(), s -> s
+				.map(valueProvider))
+				.distinct()
+				.filter(f -> StringUtils.containsIgnoreCase(f.name(), query.getFilter().get()));
 		});
 
 		combo.addValueChangeListener(event -> this.listEntities());

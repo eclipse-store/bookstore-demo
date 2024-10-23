@@ -17,12 +17,24 @@ package org.eclipse.store.demo.bookstore.data;
 
 import static org.eclipse.store.demo.bookstore.util.ValidationUtils.requireNonBlank;
 
+import one.microstream.gigamap.Indexer;
+
 /**
  * Feature type for all named entities, with {@link Comparable} capabilities.
  *
  */
 public abstract class Named implements Comparable<Named>
 {
+	public static final Indexer.AbstractString<Named> nameIndex = new Indexer.AbstractString<>()
+	{
+		@Override
+		public String indexEntity(final Named entity)
+		{
+			return entity.name();
+		}
+	};
+	
+	
 	private final String name;
 
 	protected Named(final String name)

@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
 
 import javax.money.MonetaryAmount;
 
+import one.microstream.gigamap.Indexer;
+
 /**
  * Book entity which holds an ISBN-13, title, {@link Author}, {@link Genre}, {@link Publisher},
  * {@link Language} and the purchase and retail price.
@@ -32,6 +34,76 @@ import javax.money.MonetaryAmount;
  */
 public class Book extends Named
 {
+	public static final Indexer.AbstractString<Book> isbn13Index = new Indexer.AbstractString<>()
+	{
+		@Override
+		public String indexEntity(final Book entity)
+		{
+			return entity.isbn13();
+		}
+	};
+	
+	public static final Indexer.Abstract<Book, Author> authorIndex = new Indexer.Abstract<>()
+	{
+		@Override
+		public Class<Author> keyType()
+		{
+			return Author.class;
+		}
+		
+		@Override
+		public Author indexEntity(final Book entity)
+		{
+			return entity.author();
+		}
+	};
+	
+	public static final Indexer.Abstract<Book, Genre> genreIndex = new Indexer.Abstract<>()
+	{
+		@Override
+		public Class<Genre> keyType()
+		{
+			return Genre.class;
+		}
+		
+		@Override
+		public Genre indexEntity(final Book entity)
+		{
+			return entity.genre();
+		}
+	};
+	
+	public static final Indexer.Abstract<Book, Publisher> publisherIndex = new Indexer.Abstract<>()
+	{
+		@Override
+		public Class<Publisher> keyType()
+		{
+			return Publisher.class;
+		}
+		
+		@Override
+		public Publisher indexEntity(final Book entity)
+		{
+			return entity.publisher();
+		}
+	};
+	
+	public static final Indexer.Abstract<Book, Language> languageIndex = new Indexer.Abstract<>()
+	{
+		@Override
+		public Class<Language> keyType()
+		{
+			return Language.class;
+		}
+		
+		@Override
+		public Language indexEntity(final Book entity)
+		{
+			return entity.language();
+		}
+	};
+	
+	
 	private final String         isbn13       ;
 	private final Author         author       ;
 	private final Genre          genre        ;

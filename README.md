@@ -1,8 +1,8 @@
 # EclipseStore BookStore Demo
 
-Deploy this demo to Gitpod:
+A version of the BookStore Demo which uses the GigaMap.
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/eclipse-store/bookstore-demo)
+For more information visit the [GigaMap Beta Page](https://github.com/microstream-one/gigamap-beta).
 
 ## Running locally
 
@@ -11,8 +11,6 @@ This is a [Spring Boot](https://spring.io/guides/gs/spring-boot/) application bu
 You can build and run it from the command line:
 
 ```
-git clone https://github.com/eclipse-store/bookstore-demo.git
-cd bookstore-demo
 mvn spring-boot:run
 ```
 

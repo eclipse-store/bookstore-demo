@@ -62,13 +62,7 @@ public class Commands
 
 		Country searchCountry(final String countryCode)
 		{
-			return this.data().shops().compute(shops ->
-				shops.map(s -> s.address().city().state().country())
-					.distinct()
-					.filter(c -> c.code().equalsIgnoreCase(countryCode))
-					.findAny()
-					.orElse(null)
-			);
+			return this.data().shops().countryByCode(countryCode);
 		}
 
 	}

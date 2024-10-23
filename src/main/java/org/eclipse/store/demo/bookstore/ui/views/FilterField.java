@@ -14,7 +14,7 @@ package org.eclipse.store.demo.bookstore.ui.views;
  * #L%
  */
 
-import com.vaadin.flow.function.SerializablePredicate;
+import one.microstream.gigamap.Condition;
 
 /**
  * A UI component which is used for filtering.
@@ -24,7 +24,7 @@ import com.vaadin.flow.function.SerializablePredicate;
  */
 public interface FilterField<E, F>
 {
-	public SerializablePredicate<E> filter(SerializablePredicate<E> filter);
+	public Condition<E> condition();
 
 	public void updateOptions();
 }

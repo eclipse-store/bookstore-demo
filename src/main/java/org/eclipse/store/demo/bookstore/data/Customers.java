@@ -14,19 +14,18 @@ package org.eclipse.store.demo.bookstore.data;
  * #L%
  */
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.serializer.persistence.types.PersistenceStoring;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
+
+import one.microstream.gigamap.Condition;
+import one.microstream.gigamap.GigaMap;
+import one.microstream.gigamap.GigaQuery;
 
 /**
  * All registered customers of this company.
@@ -40,10 +39,16 @@ import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
  */
 public class Customers extends ReadWriteLocked
 {
-	/**
-	 * Map with {@link Customer#customerId()} as key
-	 */
-	private final Map<Integer, Customer> customers = new HashMap<>();
+	private final GigaMap<Customer> map = GigaMap.<Customer>Builder()
+		.withBitmapIdentityIndex(Customer.idIndex)
+		.withBitmapIndex(NamedWithAddress.address1Index)
+		.withBitmapIndex(NamedWithAddress.address2Index)
+		.withBitmapIndex(NamedWithAddress.zipcodeIndex)
+		.withBitmapIndex(NamedWithAddress.cityIndex)
+		.withBitmapIndex(NamedWithAddress.stateIndex)
+		.withBitmapIndex(NamedWithAddress.countryIndex)
+		.withBitmapIndex(Named.nameIndex)
+		.build();
 
 	public Customers()
 	{
@@ -59,7 +64,11 @@ public class Customers extends ReadWriteLocked
 	 */
 	public void add(final Customer customer)
 	{
-		this.add(customer, BookStoreDemo.getInstance().storageManager());
+		this.write(() ->
+		{
+			this.map.add(customer);
+			this.map.store();
+		});
 	}
 
 	/**
@@ -74,9 +83,10 @@ public class Customers extends ReadWriteLocked
 		final PersistenceStoring persister
 	)
 	{
-		this.write(() -> {
-			this.customers.put(customer.customerId(), customer);
-			persister.store(this.customers);
+		this.write(() ->
+		{
+			this.map.add(customer);
+			persister.store(this.map);
 		});
 	}
 
@@ -89,7 +99,11 @@ public class Customers extends ReadWriteLocked
 	 */
 	public void addAll(final Collection<? extends Customer> customers)
 	{
-		this.addAll(customers, BookStoreDemo.getInstance().storageManager());
+		this.write(() ->
+		{
+			this.map.addAll(customers);
+			this.map.store();
+		});
 	}
 
 	/**
@@ -104,13 +118,10 @@ public class Customers extends ReadWriteLocked
 		final PersistenceStoring             persister
 	)
 	{
-		this.write(() -> {
-			this.customers.putAll(
-				customers.stream().collect(
-					Collectors.toMap(Customer::customerId, Function.identity())
-				)
-			);
-			persister.store(this.customers);
+		this.write(() ->
+		{
+			this.map.addAll(customers);
+			persister.store(this.map);
 		});
 	}
 
@@ -121,37 +132,8 @@ public class Customers extends ReadWriteLocked
 	 */
 	public synchronized int customerCount()
 	{
-		return this.read(
-			this.customers::size
-		);
-	}
-
-	/**
-	 * Gets all customers as a {@link List}.
-	 * Modifications to the returned list are not reflected to the backed data.
-	 *
-	 * @return all customers
-	 */
-	public List<Customer> all()
-	{
 		return this.read(() ->
-			new ArrayList<>(this.customers.values())
-		);
-	}
-
-	/**
-	 * Executes a function with a {@link Stream} of {@link Customer}s and returns the computed value.
-	 *
-	 * @param <T> the return type
-	 * @param streamFunction computing function
-	 * @return the computed result
-	 */
-	public <T> T compute(final Function<Stream<Customer>, T> streamFunction)
-	{
-		return this.read(() ->
-			streamFunction.apply(
-				this.customers.values().parallelStream()
-			)
+			(int)this.map.size()
 		);
 	}
 
@@ -164,8 +146,26 @@ public class Customers extends ReadWriteLocked
 	public Customer ofId(final int customerId)
 	{
 		return this.read(() ->
-			this.customers.get(customerId)
+			this.map.query(Customer.idIndex.is(customerId)).findFirst().orElse(null)
 		);
+	}
+	
+	public <R> R compute(
+		final Condition<Customer>           condition,
+		final int                           offset,
+		final int                           limit,
+		final Function<Stream<Customer>, R> function
+	)
+	{
+		return this.read(() ->
+		{
+			GigaQuery<Customer> query = this.map.query();
+			if(condition != null)
+			{
+				query = query.and(condition);
+			}
+			return function.apply(query.toList(offset, limit).stream());
+		});
 	}
 
 }

@@ -73,7 +73,6 @@ public class RootLayout extends AppLayout {
         nav.addItem(new SideNavItem(this.getTranslation("home")      , ViewMain.class          , VaadinIcon.HOME.create()));
         nav.addItem(new SideNavItem(this.getTranslation("books")     , ViewBooks.class         , VaadinIcon.BOOK.create()));
         nav.addItem(new SideNavItem(this.getTranslation("shops")     , ViewShops.class         , VaadinIcon.SHOP.create()));
-        nav.addItem(new SideNavItem(this.getTranslation("inventory") , ViewInventory.class     , VaadinIcon.STORAGE.create()));
         nav.addItem(new SideNavItem(this.getTranslation("customers") , ViewCustomers.class     , LineAwesomeIcon.PERSON_BOOTH_SOLID.create()));
         nav.addItem(new SideNavItem(this.getTranslation("purchases") , ViewPurchases.class     , LineAwesomeIcon.SHOPPING_BASKET_SOLID.create()));
        return nav;

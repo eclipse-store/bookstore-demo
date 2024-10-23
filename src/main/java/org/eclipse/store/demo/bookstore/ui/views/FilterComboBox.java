@@ -21,7 +21,8 @@ import java.util.function.Function;
 import org.eclipse.store.demo.bookstore.data.Named;
 
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.function.SerializablePredicate;
+
+import one.microstream.gigamap.Condition;
 
 /**
  * Filter {@link ComboBox} for {@link Named} entities.
@@ -31,27 +32,27 @@ import com.vaadin.flow.function.SerializablePredicate;
  */
 public class FilterComboBox<E, F extends Named> extends ComboBoxNamed<F> implements FilterField<E, F>
 {
-	private final Function<F, SerializablePredicate<E>> filterFactory;
+	private final Function<F, Condition<E>> conditionFactory;
 
 	public FilterComboBox(
-		final Function<F, SerializablePredicate<E>> filterFactory
+		final Function<F, Condition<E>> conditionFactory
 	)
 	{
 		super();
 
-		this.filterFactory = notNull(filterFactory);
+		this.conditionFactory = notNull(conditionFactory);
 
 		this.setPlaceholder(this.getTranslation("filter"));
 		this.setClearButtonVisible(true);
 	}
 
 	@Override
-	public SerializablePredicate<E> filter(final SerializablePredicate<E> filter)
+	public Condition<E> condition()
 	{
 		final F value = this.getValue();
-		return value != null
-			? filter.and(this.filterFactory.apply(value))
-			: filter
+		return value == null
+			? null
+			: this.conditionFactory.apply(value)
 		;
 	}
 

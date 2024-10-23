@@ -14,18 +14,12 @@ package org.eclipse.store.demo.bookstore.data;
  * #L%
  */
 
-import static java.util.stream.Collectors.toList;
-import static org.eclipse.serializer.util.X.coalesce;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
+
+import one.microstream.gigamap.GigaMap;
+import one.microstream.gigamap.Indexer;
 
 /**
  * Inventory entity which holds {@link Book}s and amounts of them.
@@ -36,21 +30,39 @@ import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
  */
 public class Inventory extends ReadWriteLocked
 {
-	private final Map<Book, Integer> inventoryMap;
+	public final static Indexer.Abstract<InventoryItem, Book> bookIndex = new Indexer.Abstract<>()
+	{
+		@Override
+		public Class<Book> keyType()
+		{
+			return Book.class;
+		}
+		
+		@Override
+		public Book indexEntity(final InventoryItem entity)
+		{
+			return entity.book();
+		}
+	};
+	
+	
+	private final GigaMap<InventoryItem> map = GigaMap.<InventoryItem>Builder()
+		.withBitmapIndex(bookIndex)
+		.build();
 
 	public Inventory()
 	{
-		this(new HashMap<>());
+		super();
 	}
 
 	/**
 	 * Package-private constructor used by {@link RandomDataGenerator}.
 	 */
-	Inventory(final Map<Book, Integer> inventoryMap)
+	Inventory(final List<InventoryItem> inventory)
 	{
 		super();
 		
-		this.inventoryMap = inventoryMap;
+		this.map.addAll(inventory);
 	}
 	
 	/**
@@ -61,25 +73,8 @@ public class Inventory extends ReadWriteLocked
 	 */
 	public int amount(final Book book)
 	{
-		return this.read(() -> coalesce(
-			this.inventoryMap.get(book),
-			0
-		));
-	}
-
-	/**
-	 * Executes a function with a {@link Stream} of {@link Entry}s and returns the computed value.
-	 *
-	 * @param <T> the return type
-	 * @param streamFunction computing function
-	 * @return the computed result
-	 */
-	public <T> T compute(final Function<Stream<Entry<Book, Integer>>, T> streamFunction)
-	{
 		return this.read(() ->
-			streamFunction.apply(
-				this.inventoryMap.entrySet().stream()
-			)
+			(int)this.map.query(bookIndex.is(book)).findFirst().map(InventoryItem::amount).orElse(0)
 		);
 	}
 
@@ -91,20 +86,7 @@ public class Inventory extends ReadWriteLocked
 	public int slotCount()
 	{
 		return this.read(() ->
-			this.inventoryMap.size()
-		);
-	}
-
-	/**
-	 * Gets all books and their amount as a {@link List}.
-	 * Modifications to the returned list are not reflected to the backed data.
-	 *
-	 * @return all books and their amount
-	 */
-	public List<Entry<Book, Integer>> slots()
-	{
-		return this.read(() ->
-			new ArrayList<>(this.inventoryMap.entrySet())
+			(int)this.map.size()
 		);
 	}
 
@@ -117,7 +99,7 @@ public class Inventory extends ReadWriteLocked
 	public List<Book> books()
 	{
 		return this.read(() ->
-			this.inventoryMap.keySet().stream().collect(toList())
+			bookIndex.resolveKeys(this.map)
 		);
 	}
 
