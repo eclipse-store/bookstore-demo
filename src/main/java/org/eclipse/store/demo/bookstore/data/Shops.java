@@ -47,7 +47,9 @@ public class Shops extends ReadWriteLocked
 		.withBitmapIndex(NamedWithAddress.cityIndex)
 		.withBitmapIndex(NamedWithAddress.stateIndex)
 		.withBitmapIndex(NamedWithAddress.countryIndex)
-		.build();
+		.build()
+	;
+	
 
 	public Shops()
 	{

@@ -55,9 +55,6 @@ import one.microstream.gigamap.GigaQuery;
  */
 public class Purchases extends ReadWriteLocked
 {
-	
-	
-	
 	private final GigaMap<Purchase> map = GigaMap.<Purchase>Builder()
 		.withBitmapIndex(Purchase.yearIndex)
 		.withBitmapIndex(Purchase.foreignIndex)
@@ -65,7 +62,9 @@ public class Purchases extends ReadWriteLocked
 		.withBitmapIndex(Purchase.shopCountryIndex)
 		.withBitmapIndex(Purchase.employeeIndex)
 		.withBitmapIndex(Purchase.customerIndex)
-		.build();
+		.build()
+	;
+	
 
 	public Purchases()
 	{

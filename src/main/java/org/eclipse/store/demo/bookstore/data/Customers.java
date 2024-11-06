@@ -48,7 +48,9 @@ public class Customers extends ReadWriteLocked
 		.withBitmapIndex(NamedWithAddress.stateIndex)
 		.withBitmapIndex(NamedWithAddress.countryIndex)
 		.withBitmapIndex(Named.nameIndex)
-		.build();
+		.build()
+	;
+	
 
 	public Customers()
 	{
@@ -130,10 +132,10 @@ public class Customers extends ReadWriteLocked
 	 *
 	 * @return the amount of customers
 	 */
-	public synchronized int customerCount()
+	public synchronized long customerCount()
 	{
 		return this.read(() ->
-			(int)this.map.size()
+			this.map.size()
 		);
 	}
 

@@ -48,7 +48,9 @@ public class Inventory extends ReadWriteLocked
 	
 	private final GigaMap<InventoryItem> map = GigaMap.<InventoryItem>Builder()
 		.withBitmapIndex(bookIndex)
-		.build();
+		.build()
+	;
+	
 
 	public Inventory()
 	{
