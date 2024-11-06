@@ -129,10 +129,10 @@ public class Shops extends ReadWriteLocked
 	 *
 	 * @return the amount of shops
 	 */
-	public int shopCount()
+	public long shopCount()
 	{
 		return this.read(() ->
-			(int)this.map.size()
+			this.map.size()
 		);
 	}
 

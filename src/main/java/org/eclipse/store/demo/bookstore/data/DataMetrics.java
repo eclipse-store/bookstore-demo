@@ -17,14 +17,14 @@ package org.eclipse.store.demo.bookstore.data;
 
 public class DataMetrics
 {
-	private final int bookCount   ;
-	private final int countryCount;
-	private final int shopCount   ;
+	private final long bookCount   ;
+	private final long countryCount;
+	private final long shopCount   ;
 
 	public DataMetrics(
-		final int bookCount   ,
-		final int countryCount,
-		final int shopCount
+		final long bookCount   ,
+		final long countryCount,
+		final long shopCount
 	)
 	{
 		super();
@@ -33,17 +33,17 @@ public class DataMetrics
 		this.shopCount     = shopCount   ;
 	}
 
-	public int bookCount()
+	public long bookCount()
 	{
 		return this.bookCount;
 	}
 
-	public int countryCount()
+	public long countryCount()
 	{
 		return this.countryCount;
 	}
 
-	public int shopCount()
+	public long shopCount()
 	{
 		return this.shopCount;
 	}

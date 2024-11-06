@@ -105,7 +105,7 @@ public class Books extends ReadWriteLocked
 	public List<Author> authors()
 	{
 		return this.read(() ->
-		Book.authorIndex.resolveKeys(this.map)
+			Book.authorIndex.resolveKeys(this.map)
 		);
 	}
 
@@ -118,7 +118,7 @@ public class Books extends ReadWriteLocked
 	public List<Genre> genres()
 	{
 		return this.read(() ->
-		Book.genreIndex.resolveKeys(this.map)
+			Book.genreIndex.resolveKeys(this.map)
 		);
 	}
 
@@ -153,10 +153,10 @@ public class Books extends ReadWriteLocked
 	 *
 	 * @return the amount of books
 	 */
-	public int bookCount()
+	public long bookCount()
 	{
 		return this.read(() ->
-			(int)this.map.size()
+			this.map.size()
 		);
 	}
 
