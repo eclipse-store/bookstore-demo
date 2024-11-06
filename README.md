@@ -22,11 +22,11 @@ Then open [http://localhost:8080/](http://localhost:8080/)
 
 ## Description
 
-The EclipseStore BookStore Demo is a fully fledged sample application.
+The EclipseStore BookStore Demo is a fully-fledged sample application.
 It shows how to design an application with EclipseStore from the ground up.
 
-A company which operates book stores around the world is modelled.
-From the data root on there are four main domains:
+A company that operates bookstores around the world is modeled.
+From the data root on, there are four main domains:
 
 - [Books](./src/main/java/org/eclipse/store/demo/bookstore/data/Books.java): range of all books sold by the company
 - [Shops](./src/main/java/org/eclipse/store/demo/bookstore/data/Shops.java): retail shops operated by the company
@@ -36,7 +36,7 @@ From the data root on there are four main domains:
 The [data layer](./src/main/java/org/eclipse/store/demo/bookstore/data/) also contains validation and concurrency handling. 
 
 We used [Vaadin](https://vaadin.com) to create the [UI](./src/main/java/org/eclipse/store/demo/bookstore/ui/).
-Start point is the main class [VaadinApplication](./src/main/java/org/eclipse/store/demo/bookstore/VaadinApplication.java).
+The start point is the main class [VaadinApplication](./src/main/java/org/eclipse/store/demo/bookstore/VaadinApplication.java).
 
 [GraphQL](./src/main/java/org/eclipse/store/demo/bookstore/graphql/) is used to get data access from outside.
 Playground application is available at [http://localhost:8080/playground](http://localhost:8080/playground) 
