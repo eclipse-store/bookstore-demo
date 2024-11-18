@@ -5,7 +5,7 @@ logging.level:
   root: info
   org.atmosphere: warn
 
-vaadin.whitelisted-packages: com.vaadin,org.vaadin,org.eclipse,graphql
+vaadin.allowed-packages: com.vaadin,org.vaadin,org.eclipse,graphql
 
 logging.level.org.atmosphere: warn
  
