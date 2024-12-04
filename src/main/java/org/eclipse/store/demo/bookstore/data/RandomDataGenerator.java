@@ -18,6 +18,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.Year;
@@ -110,6 +111,7 @@ public class RandomDataGenerator implements HasLogger
 
 	private final Random                 random     = new Random()         ;
 	private final Faker                  faker      = Faker.instance()     ;
+	private final LocalDate              today      = LocalDate.now();
 	private final AtomicInteger          customerId = new AtomicInteger(0) ;
 	private final Set<String>            usedIsbns  = new HashSet<>(4096)  ;
 	private final List<Book>             bookList   = new ArrayList<>(4096);
@@ -436,11 +438,28 @@ public class RandomDataGenerator implements HasLogger
 		final Random  random
 	)
 	{
-		final Month month      = Month.of(random.nextInt(12) + 1);
-		final int   dayOfMonth = random.nextInt(month.length(isLeapYear)) + 1;
+		Month month;
+		int   dayOfMonth;
+		
+		if(year == this.today.getYear())
+		{
+			month      = Month.of(random.nextInt(this.today.getMonthValue()) + 1);
+			dayOfMonth = random.nextInt(month.length(isLeapYear)) + 1;
+			if(month == this.today.getMonth() && dayOfMonth >= this.today.getDayOfMonth())
+			{
+				dayOfMonth = this.today.getDayOfMonth() - 1;
+			}
+		}
+		else
+		{
+			month      = Month.of(random.nextInt(12) + 1);
+			dayOfMonth = random.nextInt(month.length(isLeapYear)) + 1;
+		}
+		
 		final int   hour       = 8 + random.nextInt(11);
 		final int   minute     = random.nextInt(60);
-		return LocalDateTime.of(year, month.getValue(), dayOfMonth, hour, minute);
+		final int   second     = random.nextInt(60);
+		return LocalDateTime.of(year, month.getValue(), dayOfMonth, hour, minute, second);
 	}
 
 	private Book randomBook()
