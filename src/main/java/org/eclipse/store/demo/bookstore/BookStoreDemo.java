@@ -17,6 +17,7 @@ package org.eclipse.store.demo.bookstore;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 import javax.money.CurrencyUnit;
@@ -120,6 +121,11 @@ public final class BookStoreDemo implements HasLogger
 	)
 	{
 		return money(RETAIL_MULTIPLICANT.multiply(new BigDecimal(purchasePrice.getNumber().doubleValue())));
+	}
+	
+	public static LocalDateTime now()
+	{
+		return LocalDateTime.now();
 	}
 
 

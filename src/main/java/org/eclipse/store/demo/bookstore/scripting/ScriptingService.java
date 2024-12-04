@@ -8,6 +8,8 @@ import org.apache.commons.jexl3.introspection.JexlPermissions;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.springframework.stereotype.Service;
 
+import com.github.javafaker.Faker;
+
 @Service
 public class ScriptingService
 {
@@ -39,8 +41,12 @@ public class ScriptingService
 	private MapContext createContext()
 	{
 		final MapContext context = new MapContext();
-		// expose the data root object as 'data'
+		// expose the data root object
 		context.set("data", BookStoreDemo.getInstance().data());
+		// expose the demo instance
+		context.set("demo", BookStoreDemo.getInstance());
+		// expose a faker instance
+		context.set("faker", Faker.instance());
 		return context;
 	}
 }

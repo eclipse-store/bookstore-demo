@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 
 /**
@@ -51,7 +52,7 @@ public class ScriptingController implements HasLogger
 	}
 	
 	/**
-	 * Custom Jackson object mapper which can see all fields, for JSON serialization.
+	 * Custom Jackson object mapper for JSON serialization.
 	 * 
 	 * @return custom object mapper
 	 */
@@ -60,6 +61,7 @@ public class ScriptingController implements HasLogger
 	{
 		 final ObjectMapper mapper = new ObjectMapper();
 		 mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		 mapper.registerModule(new JavaTimeModule());
 		 return mapper;
 	}
 	
