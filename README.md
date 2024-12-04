@@ -42,6 +42,8 @@ The start point is the main class [VaadinApplication](./src/main/java/org/eclips
 Playground application is available at [http://localhost:8080/playground](http://localhost:8080/playground) 
 and a graphical overview of the schema: [http://localhost:8080/voyager](http://localhost:8080/voyager) 
 
+[Apache JEXL](./src/main/java/org/eclipse/store/demo/bookstore/scripting/) is used to execute arbitrary scripts on the object graph.
+
 
 ## If you find a bug or want to suggest an improvement
 
