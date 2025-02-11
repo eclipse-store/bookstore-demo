@@ -136,7 +136,7 @@ public class Purchases extends ReadWriteLocked
 	{
 		return this.read(() -> {
 			final IntSummaryStatistics summary = new IntSummaryStatistics();
-			Purchase.yearIndex.resolveFor(this.map.index().bitmap()).iterateKeys(summary::accept);
+			Purchase.yearIndex.resolveKeys(this.map).forEach(summary::accept);
 			return Range.closed(summary.getMin(), summary.getMax());
 		});
 	}

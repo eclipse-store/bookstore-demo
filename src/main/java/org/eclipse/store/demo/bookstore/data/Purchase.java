@@ -26,6 +26,8 @@ import java.util.stream.Stream;
 import javax.money.MonetaryAmount;
 
 import one.microstream.gigamap.Indexer;
+import one.microstream.gigamap.IndexerBoolean;
+import one.microstream.gigamap.IndexerInteger;
 
 /**
  * Purchase entity which holds a {@link Shop}, {@link Employee},
@@ -36,19 +38,19 @@ import one.microstream.gigamap.Indexer;
  */
 public class Purchase
 {
-	public static final Indexer.AbstractInteger<Purchase> yearIndex = new Indexer.AbstractInteger<>()
+	public static final IndexerInteger<Purchase> yearIndex = new IndexerInteger.Abstract<>()
 	{
 		@Override
-		public Integer indexEntity(final Purchase entity)
+		public Integer getInteger(final Purchase entity)
 		{
 			return entity.timestamp().getYear();
 		}
 	};
 	
-	public static final Indexer.AbstractBoolean<Purchase> foreignIndex = new Indexer.AbstractBoolean<>()
+	public static final IndexerBoolean<Purchase> foreignIndex = new IndexerBoolean.Abstract<>()
 	{
 		@Override
-		public Boolean indexEntity(final Purchase entity)
+		public Boolean getBoolean(final Purchase entity)
 		{
 			return entity.customer().address().city() != entity.shop().address().city();
 		}

@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import javax.money.MonetaryAmount;
 
 import one.microstream.gigamap.Indexer;
+import one.microstream.gigamap.IndexerString;
 
 /**
  * Book entity which holds an ISBN-13, title, {@link Author}, {@link Genre}, {@link Publisher},
@@ -34,10 +35,10 @@ import one.microstream.gigamap.Indexer;
  */
 public class Book extends Named
 {
-	public static final Indexer.AbstractString<Book> isbn13Index = new Indexer.AbstractString<>()
+	public static final IndexerString<Book> isbn13Index = new IndexerString.Abstract<>()
 	{
 		@Override
-		public String indexEntity(final Book entity)
+		public String getString(final Book entity)
 		{
 			return entity.isbn13();
 		}

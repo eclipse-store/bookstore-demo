@@ -17,7 +17,7 @@ package org.eclipse.store.demo.bookstore.data;
 
 import static org.eclipse.store.demo.bookstore.util.ValidationUtils.requirePositive;
 
-import one.microstream.gigamap.Indexer;
+import one.microstream.gigamap.IndexerInteger;
 
 /**
  * Customer entity which holds a customer id, name and an {@link Address}.
@@ -27,10 +27,10 @@ import one.microstream.gigamap.Indexer;
  */
 public class Customer extends NamedWithAddress
 {
-	public static final Indexer.AbstractInteger<Customer> idIndex = new Indexer.AbstractInteger<>()
+	public static final IndexerInteger<Customer> idIndex = new IndexerInteger.Abstract<>()
 	{
 		@Override
-		public Integer indexEntity(final Customer entity)
+		public Integer getInteger(final Customer entity)
 		{
 			return entity.customerId();
 		}

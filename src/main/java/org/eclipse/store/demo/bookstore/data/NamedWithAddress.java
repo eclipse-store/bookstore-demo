@@ -18,6 +18,7 @@ package org.eclipse.store.demo.bookstore.data;
 import java.util.Objects;
 
 import one.microstream.gigamap.Indexer;
+import one.microstream.gigamap.IndexerString;
 
 /**
  * Feature type for all named entities with an {@link Address}.
@@ -25,28 +26,28 @@ import one.microstream.gigamap.Indexer;
  */
 public abstract class NamedWithAddress extends Named
 {
-	public static final Indexer.AbstractString<NamedWithAddress> address1Index = new Indexer.AbstractString<>()
+	public static final IndexerString<NamedWithAddress> address1Index = new IndexerString.Abstract<>()
 	{
 		@Override
-		public String indexEntity(final NamedWithAddress entity)
+		public String getString(final NamedWithAddress entity)
 		{
 			return entity.address().address();
 		}
 	};
 
-	public static final Indexer.AbstractString<NamedWithAddress> address2Index = new Indexer.AbstractString<>()
+	public static final IndexerString<NamedWithAddress> address2Index = new IndexerString.Abstract<>()
 	{
 		@Override
-		public String indexEntity(final NamedWithAddress entity)
+		public String getString(final NamedWithAddress entity)
 		{
 			return entity.address().address2();
 		}
 	};
 
-	public static final Indexer.AbstractString<NamedWithAddress> zipcodeIndex = new Indexer.AbstractString<>()
+	public static final IndexerString<NamedWithAddress> zipcodeIndex = new IndexerString.Abstract<>()
 	{
 		@Override
-		public String indexEntity(final NamedWithAddress entity)
+		public String getString(final NamedWithAddress entity)
 		{
 			return entity.address().zipCode();
 		}
