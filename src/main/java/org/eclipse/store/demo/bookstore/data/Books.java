@@ -30,11 +30,11 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.QueryBuilder;
+import org.eclipse.serializer.concurrency.LockScope;
 import org.eclipse.serializer.persistence.types.PersistenceStoring;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.demo.bookstore.data.Index.DocumentPopulator;
 import org.eclipse.store.demo.bookstore.data.Index.EntityMatcher;
-import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 
 /**
@@ -46,9 +46,9 @@ import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
  * All operations on this type are thread safe.
  *
  * @see Data#books()
- * @see ReadWriteLocked
+ * @see LockScope
  */
-public class Books extends ReadWriteLocked
+public class Books extends LockScope
 {
 	/*
 	 * Multiple maps holding references to the books, for a faster lookup.

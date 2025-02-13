@@ -38,11 +38,10 @@ import java.util.stream.Stream;
 
 import javax.money.MonetaryAmount;
 
+import org.eclipse.serializer.concurrency.StripeLockScope;
 import org.eclipse.serializer.persistence.types.PersistenceStoring;
 import org.eclipse.serializer.reference.Lazy;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
-import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
-import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLockedStriped;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 
 import com.google.common.collect.Range;
@@ -55,9 +54,9 @@ import com.google.common.collect.Range;
  * All operations on this type are thread safe.
  *
  * @see Data#purchases()
- * @see ReadWriteLocked
+ * @see StripeLockScope
  */
-public class Purchases extends ReadWriteLockedStriped
+public class Purchases extends StripeLockScope
 {
 	/**
 	 * This class hold all purchases made in a specific year.

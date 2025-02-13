@@ -25,16 +25,16 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
+import org.eclipse.serializer.concurrency.LockScope;
 
 /**
  * Inventory entity which holds {@link Book}s and amounts of them.
  * <p>
  * All operations on this type are thread safe.
  *
- * @see ReadWriteLocked
+ * @see LockScope
  */
-public class Inventory extends ReadWriteLocked
+public class Inventory extends LockScope
 {
 	private final Map<Book, Integer> inventoryMap;
 

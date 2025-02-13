@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import org.eclipse.serializer.concurrency.LockScope;
 import org.eclipse.serializer.persistence.types.PersistenceStoring;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
-import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 
 /**
@@ -33,9 +33,9 @@ import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
  * All operations on this type are thread safe.
  *
  * @see Data#shops()
- * @see ReadWriteLocked
+ * @see LockScope
  */
-public class Shops extends ReadWriteLocked
+public class Shops extends LockScope
 {
 	/**
 	 * Simple list to hold the shops.
