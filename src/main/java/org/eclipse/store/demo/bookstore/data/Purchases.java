@@ -86,8 +86,7 @@ public class Purchases extends ReadWriteLocked
 			persister.store(this.map);
 			this.map.release();
 						
-			return purchases.stream().map(p -> p.customer())
-				.distinct()
+			return purchases.stream().map(Purchase::customer)
 				.collect(Collectors.toSet());
 		});
 	}
@@ -145,7 +144,6 @@ public class Purchases extends ReadWriteLocked
 	 * Clears all {@link Lazy} references regarding all purchases.
 	 * This frees the used memory but you do not lose the persisted data. It is loaded again on demand.
 	 *
-	 * @see #clear(int)
 	 */
 	public void clear()
 	{
