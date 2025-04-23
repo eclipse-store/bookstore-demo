@@ -43,7 +43,7 @@
 		<eclipsestore.version>2.1.2</eclipsestore.version>
 		<lucene.version>8.11.2</lucene.version>
 		<vaadin.version>24.3.5</vaadin.version>
-		<gigamap.version>1.0.0</gigamap.version>
+		<gigamap.version>1.1.0</gigamap.version>
 	</properties>
 
 	<repositories>
