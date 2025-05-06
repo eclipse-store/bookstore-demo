@@ -1,10 +1,10 @@
 type Query {	
-	booksByTitle(title: String): [Book]
+	booksByName(name: String): [Book]
 	employeeOfTheYear(year: Int): Employee
 	bestSellerList(year: Int): [BookSales]
-	bestSellerListByCountry(year: Int, country: String): [BookSales]
+	bestSellerListByCountry(year: Int, countryCode: String): [BookSales]
 	purchasesOfForeigners(year: Int): [Purchase]
-	purchasesOfForeignersByCountry(year: Int, country: String): [Purchase]
+	purchasesOfForeignersByCountry(year: Int, countryCode: String): [Purchase]
 }
 
 type BookSales {
@@ -14,7 +14,7 @@ type BookSales {
 
 type Book {
 	isbn13: String
-	title:	String
+	name:	String
 	author: Author
 	genre: Genre
 	publisher: Publisher

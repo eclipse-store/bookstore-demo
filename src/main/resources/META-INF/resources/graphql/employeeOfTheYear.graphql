@@ -1,5 +1,0 @@
-{
-  employeeOfTheYear(year: 2024) {
-    name
-  }
-}
