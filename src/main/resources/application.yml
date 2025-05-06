@@ -12,4 +12,4 @@ logging.level.org.atmosphere: warn
 spring:
   graphql:
     graphiql:
-      enabled=true
+      enabled: true

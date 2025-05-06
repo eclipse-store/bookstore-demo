@@ -38,9 +38,7 @@ The [data layer](./src/main/java/org/eclipse/store/demo/bookstore/data/) also co
 We used [Vaadin](https://vaadin.com) to create the [UI](./src/main/java/org/eclipse/store/demo/bookstore/ui/).
 The start point is the main class [VaadinApplication](./src/main/java/org/eclipse/store/demo/bookstore/VaadinApplication.java).
 
-[GraphQL](./src/main/java/org/eclipse/store/demo/bookstore/graphql/) is used to get data access from outside.
-Playground application is available at [http://localhost:8080/playground](http://localhost:8080/playground) 
-and a graphical overview of the schema: [http://localhost:8080/voyager](http://localhost:8080/voyager) 
+[GraphQL](./src/main/java/org/eclipse/store/demo/bookstore/graphql/) (mapped to /graphql) is used to get data access from outside. GraphiQL configured to: [http://localhost:8080/graphiql](http://localhost:8080/voyager) 
 
 [Apache JEXL](./src/main/java/org/eclipse/store/demo/bookstore/scripting/) is used to execute arbitrary scripts on the object graph.
 
