@@ -208,7 +208,7 @@ public class Index<T> implements Closeable
 			final List<T> result = new ArrayList<>(topDocs.scoreDocs.length);
 			for(final ScoreDoc scoreDoc : topDocs.scoreDocs)
 			{
-				final Document document = this.searcher.doc(scoreDoc.doc);
+				final Document document = this.searcher.storedFields().document(scoreDoc.doc);
 				final T entity = this.entityMatcher.apply(document);
 				if(entity != null)
 				{
