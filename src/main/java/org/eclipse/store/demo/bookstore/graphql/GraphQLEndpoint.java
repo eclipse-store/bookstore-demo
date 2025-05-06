@@ -14,9 +14,6 @@ package org.eclipse.store.demo.bookstore.graphql;
  * #L%
  */
 
-import java.util.Collections;
-import java.util.List;
-
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.demo.bookstore.data.Book;
 import org.eclipse.store.demo.bookstore.data.BookSales;
@@ -24,42 +21,43 @@ import org.eclipse.store.demo.bookstore.data.Country;
 import org.eclipse.store.demo.bookstore.data.Employee;
 import org.eclipse.store.demo.bookstore.data.Purchase;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
+import java.util.Collections;
+import java.util.List;
 
-@Component
-public class BookStoreQueryResolver implements GraphQLQueryResolver
-{
+@Controller
+public class GraphQLEndpoint {
 	@Autowired
 	private BookStoreDemo bookStoreDemo;
-
-	public BookStoreQueryResolver()
-	{
-		super();
-	}
 
 	private Country countryByCode(final String countryCode)
 	{
 		return this.bookStoreDemo.data().shops().countryByCode(countryCode);
 	}
 
-	public List<Book> booksByTitle(final String title)
+	@QueryMapping
+	public List<Book> booksByName(@Argument String name)
 	{
-		return this.bookStoreDemo.data().books().searchByTitle(title);
+		return this.bookStoreDemo.data().books().searchByTitle(name);
 	}
 
-	public Employee employeeOfTheYear(final int year)
+	@QueryMapping
+	public Employee employeeOfTheYear(@Argument int year)
 	{
 		return this.bookStoreDemo.data().purchases().employeeOfTheYear(year);
 	}
 
-	public List<BookSales> bestSellerList(final int year)
+	@QueryMapping
+	public List<BookSales> bestSellerList(@Argument int year)
 	{
 		return this.bookStoreDemo.data().purchases().bestSellerList(year);
 	}
 
-	public List<BookSales> bestSellerListByCountry(final int year, final String countryCode)
+	@QueryMapping
+	public List<BookSales> bestSellerListByCountry(@Argument int year, @Argument String countryCode)
 	{
 		final Country country = this.countryByCode(countryCode);
 		return country == null
@@ -68,12 +66,14 @@ public class BookStoreQueryResolver implements GraphQLQueryResolver
 		;
 	}
 
-	public List<Purchase> purchasesOfForeigners(final int year)
+	@QueryMapping
+	public List<Purchase> purchasesOfForeigners(@Argument int year)
 	{
 		return this.bookStoreDemo.data().purchases().purchasesOfForeigners(year);
 	}
 
-	public List<Purchase> purchasesOfForeignersByCountry(final int year, final String countryCode)
+	@QueryMapping
+	public List<Purchase> purchasesOfForeignersByCountry(@Argument int year, @Argument String countryCode)
 	{
 		final Country country = this.countryByCode(countryCode);
 		return country == null

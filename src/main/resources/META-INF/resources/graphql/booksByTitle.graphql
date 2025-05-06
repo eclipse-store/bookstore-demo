@@ -1,8 +1,0 @@
-{
-  booksByTitle(title: "heart") {
-    title,
-    author {
-	  name
-    }
-  }
-}
