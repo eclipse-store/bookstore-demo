@@ -23,8 +23,8 @@ import java.util.regex.Pattern;
 
 import javax.money.MonetaryAmount;
 
-import one.microstream.gigamap.Indexer;
-import one.microstream.gigamap.IndexerString;
+import org.eclipse.store.gigamap.types.Indexer;
+import org.eclipse.store.gigamap.types.IndexerString;
 
 /**
  * Book entity which holds an ISBN-13, title, {@link Author}, {@link Genre}, {@link Publisher},
@@ -53,7 +53,7 @@ public class Book extends Named
 		}
 		
 		@Override
-		public Author indexEntity(final Book entity)
+		public Author index(final Book entity)
 		{
 			return entity.author();
 		}
@@ -68,7 +68,7 @@ public class Book extends Named
 		}
 		
 		@Override
-		public Genre indexEntity(final Book entity)
+		public Genre index(final Book entity)
 		{
 			return entity.genre();
 		}
@@ -83,7 +83,7 @@ public class Book extends Named
 		}
 		
 		@Override
-		public Publisher indexEntity(final Book entity)
+		public Publisher index(final Book entity)
 		{
 			return entity.publisher();
 		}
@@ -98,7 +98,7 @@ public class Book extends Named
 		}
 		
 		@Override
-		public Language indexEntity(final Book entity)
+		public Language index(final Book entity)
 		{
 			return entity.language();
 		}

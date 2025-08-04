@@ -23,9 +23,9 @@ import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 
-import one.microstream.gigamap.Condition;
-import one.microstream.gigamap.GigaMap;
-import one.microstream.gigamap.GigaQuery;
+import org.eclipse.store.gigamap.types.Condition;
+import org.eclipse.store.gigamap.types.GigaMap;
+import org.eclipse.store.gigamap.types.GigaQuery;
 
 /**
  * All retail shops operated by this company.
@@ -139,7 +139,7 @@ public class Shops extends ReadWriteLocked
 	}
 
 	/**
-	 * Clears all {@link Lazy} references used by all shops.
+	 * Clears all {@link org.eclipse.serializer.reference.Lazy} references used by all shops.
 	 * This frees the used memory but you do not lose the persisted data. It is loaded again on demand.
 	 *
 	 * @see Shop#clear()

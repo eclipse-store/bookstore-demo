@@ -20,7 +20,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.function.SerializableFunction;
 
-import one.microstream.gigamap.Condition;
+import org.eclipse.store.gigamap.types.Condition;
 
 /**
  * Filter {@link TextField} for arbitrary entities.

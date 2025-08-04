@@ -14,7 +14,8 @@ package org.eclipse.store.demo.bookstore.ui.views;
  * #L%
  */
 
-import one.microstream.gigamap.Condition;
+import org.eclipse.store.gigamap.types.Condition;
+
 
 /**
  * A UI component which is used for filtering.

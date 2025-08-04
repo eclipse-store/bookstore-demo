@@ -38,8 +38,8 @@ import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.BeforeEvent;
+import org.eclipse.store.gigamap.types.Condition;
 
-import one.microstream.gigamap.Condition;
 
 /**
  * Abstract view to display entities in a {@link Grid}.

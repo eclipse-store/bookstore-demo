@@ -39,9 +39,9 @@ import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 
 import com.google.common.collect.Range;
 
-import one.microstream.gigamap.Condition;
-import one.microstream.gigamap.GigaMap;
-import one.microstream.gigamap.GigaQuery;
+import org.eclipse.store.gigamap.types.Condition;
+import org.eclipse.store.gigamap.types.GigaMap;
+import org.eclipse.store.gigamap.types.GigaQuery;
 
 /**
  * All purchases made by all customers in all stores.

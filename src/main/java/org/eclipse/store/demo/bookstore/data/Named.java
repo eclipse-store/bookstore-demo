@@ -17,7 +17,7 @@ package org.eclipse.store.demo.bookstore.data;
 
 import static org.eclipse.store.demo.bookstore.util.ValidationUtils.requireNonBlank;
 
-import one.microstream.gigamap.IndexerString;
+import org.eclipse.store.gigamap.types.IndexerString;
 
 /**
  * Feature type for all named entities, with {@link Comparable} capabilities.

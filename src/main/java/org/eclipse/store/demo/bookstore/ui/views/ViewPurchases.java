@@ -23,7 +23,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.router.Route;
 
-import one.microstream.gigamap.Condition;
+import org.eclipse.store.gigamap.types.Condition;
 
 /**
  * View to display {@link Purchases}.

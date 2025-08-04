@@ -18,8 +18,8 @@ import java.util.List;
 
 import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
 
-import one.microstream.gigamap.GigaMap;
-import one.microstream.gigamap.Indexer;
+import org.eclipse.store.gigamap.types.GigaMap;
+import org.eclipse.store.gigamap.types.Indexer;
 
 /**
  * Inventory entity which holds {@link Book}s and amounts of them.
@@ -39,7 +39,7 @@ public class Inventory extends ReadWriteLocked
 		}
 		
 		@Override
-		public Book indexEntity(final InventoryItem entity)
+		public Book index(final InventoryItem entity)
 		{
 			return entity.book();
 		}

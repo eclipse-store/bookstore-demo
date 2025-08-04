@@ -26,7 +26,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.SerializableFunction;
 import com.vaadin.flow.router.Route;
 
-import one.microstream.gigamap.Condition;
+import org.eclipse.store.gigamap.types.Condition;
 
 /**
  * View to display and modify {@link Books}.

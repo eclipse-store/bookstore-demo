@@ -11,9 +11,9 @@ import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.demo.bookstore.util.concurrent.ReadWriteLocked;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 
-import one.microstream.gigamap.Condition;
-import one.microstream.gigamap.GigaMap;
-import one.microstream.gigamap.GigaQuery;
+import org.eclipse.store.gigamap.types.Condition;
+import org.eclipse.store.gigamap.types.GigaMap;
+import org.eclipse.store.gigamap.types.GigaQuery;
 
 /**
  * Range of all books sold by this company.

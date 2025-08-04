@@ -25,9 +25,9 @@ import java.util.stream.Stream;
 
 import javax.money.MonetaryAmount;
 
-import one.microstream.gigamap.Indexer;
-import one.microstream.gigamap.IndexerBoolean;
-import one.microstream.gigamap.IndexerInteger;
+import org.eclipse.store.gigamap.types.Indexer;
+import org.eclipse.store.gigamap.types.IndexerBoolean;
+import org.eclipse.store.gigamap.types.IndexerInteger;
 
 /**
  * Purchase entity which holds a {@link Shop}, {@link Employee},
@@ -65,7 +65,7 @@ public class Purchase
 		}
 		
 		@Override
-		public Shop indexEntity(final Purchase entity)
+		public Shop index(final Purchase entity)
 		{
 			return entity.shop();
 		}
@@ -80,7 +80,7 @@ public class Purchase
 		}
 		
 		@Override
-		public Country indexEntity(final Purchase entity)
+		public Country index(final Purchase entity)
 		{
 			return entity.shop().address().city().state().country();
 		}
@@ -95,7 +95,7 @@ public class Purchase
 		}
 		
 		@Override
-		public Employee indexEntity(final Purchase entity)
+		public Employee index(final Purchase entity)
 		{
 			return entity.employee();
 		}
@@ -110,7 +110,7 @@ public class Purchase
 		}
 		
 		@Override
-		public Customer indexEntity(final Purchase entity)
+		public Customer index(final Purchase entity)
 		{
 			return entity.customer();
 		}

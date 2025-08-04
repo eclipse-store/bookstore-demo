@@ -17,7 +17,7 @@ package org.eclipse.store.demo.bookstore.data;
 
 import static org.eclipse.store.demo.bookstore.util.ValidationUtils.requirePositive;
 
-import one.microstream.gigamap.IndexerInteger;
+import org.eclipse.store.gigamap.types.IndexerInteger;
 
 /**
  * Customer entity which holds a customer id, name and an {@link Address}.

@@ -17,8 +17,8 @@ package org.eclipse.store.demo.bookstore.data;
 
 import java.util.Objects;
 
-import one.microstream.gigamap.Indexer;
-import one.microstream.gigamap.IndexerString;
+import org.eclipse.store.gigamap.types.Indexer;
+import org.eclipse.store.gigamap.types.IndexerString;
 
 /**
  * Feature type for all named entities with an {@link Address}.
@@ -62,7 +62,7 @@ public abstract class NamedWithAddress extends Named
 		}
 		
 		@Override
-		public City indexEntity(final NamedWithAddress entity)
+		public City index(final NamedWithAddress entity)
 		{
 			return entity.address().city();
 		}
@@ -77,7 +77,7 @@ public abstract class NamedWithAddress extends Named
 		}
 		
 		@Override
-		public State indexEntity(final NamedWithAddress entity)
+		public State index(final NamedWithAddress entity)
 		{
 			return entity.address().city().state();
 		}
@@ -92,7 +92,7 @@ public abstract class NamedWithAddress extends Named
 		}
 		
 		@Override
-		public Country indexEntity(final NamedWithAddress entity)
+		public Country index(final NamedWithAddress entity)
 		{
 			return entity.address().city().state().country();
 		}

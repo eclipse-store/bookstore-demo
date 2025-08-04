@@ -22,7 +22,7 @@ import org.eclipse.store.demo.bookstore.data.Named;
 
 import com.vaadin.flow.component.combobox.ComboBox;
 
-import one.microstream.gigamap.Condition;
+import org.eclipse.store.gigamap.types.Condition;
 
 /**
  * Filter {@link ComboBox} for {@link Named} entities.
