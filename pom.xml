@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.5</version>
+		<version>3.5.4</version>
 	</parent>
 
 	<groupId>org.eclipse.store</groupId>
@@ -40,9 +40,9 @@
 		<license.inceptionYear>2025</license.inceptionYear>
 		<license.licenseName>epl_only_v2</license.licenseName>
 		<license.licenceFile>LICENSE</license.licenceFile>
-		<eclipsestore.version>2.1.3</eclipsestore.version>
-		<lucene.version>10.2.1</lucene.version>
-		<vaadin.version>24.7.3</vaadin.version>
+		<eclipsestore.version>3.0.0</eclipsestore.version>
+		<lucene.version>10.2.2</lucene.version>
+		<vaadin.version>24.8.5</vaadin.version>
 	</properties>
 
 	<dependencyManagement>
@@ -76,17 +76,17 @@
 		<dependency>
 			<groupId>org.javamoney.moneta</groupId>
 			<artifactId>moneta-core</artifactId>
-			<version>1.4.2</version>
+			<version>1.4.5</version>
 		</dependency>
 		<dependency>
 			<groupId>info.picocli</groupId>
 			<artifactId>picocli</artifactId>
-			<version>4.2.0</version>
+			<version>4.7.7</version>
 		</dependency>
 		<dependency>
 			<groupId>info.picocli</groupId>
 			<artifactId>picocli-shell-jline3</artifactId>
-			<version>4.2.0</version>
+			<version>4.7.7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.javafaker</groupId>
@@ -112,7 +112,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>31.1-jre</version>
+			<version>33.4.8-jre</version>
 		</dependency>
 		<dependency>
 			<groupId>org.rapidpm</groupId>
