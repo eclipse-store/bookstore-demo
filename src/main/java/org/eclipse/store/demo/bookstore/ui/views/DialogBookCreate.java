@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 
 import javax.money.MonetaryAmount;
 
+import net.datafaker.Faker;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.demo.bookstore.data.Author;
 import org.eclipse.store.demo.bookstore.data.Book;
@@ -31,7 +32,6 @@ import org.eclipse.store.demo.bookstore.data.Language;
 import org.eclipse.store.demo.bookstore.data.Publisher;
 import org.eclipse.store.demo.bookstore.ui.data.DoubleToMonetaryAmountConverter;
 
-import com.github.javafaker.Faker;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -174,7 +174,7 @@ public class DialogBookCreate extends Dialog
 
 	private static String generateIsbn13()
 	{
-		final Faker faker = Faker.instance();
+		final Faker faker = new Faker();
 		final Books books = BookStoreDemo.getInstance().data().books();
 		String      isbn;
 		while(books.ofIsbn13(isbn = faker.code().isbn13(true)) != null)
