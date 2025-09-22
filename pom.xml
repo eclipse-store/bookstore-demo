@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.4</version>
+		<version>3.5.6</version>
 	</parent>
 
 	<groupId>org.eclipse.store</groupId>
@@ -42,7 +42,7 @@
 		<license.licenceFile>LICENSE</license.licenceFile>
 		<eclipsestore.version>3.0.0</eclipsestore.version>
 		<lucene.version>10.2.2</lucene.version>
-		<vaadin.version>24.8.5</vaadin.version>
+		<vaadin.version>24.8.8</vaadin.version>
 	</properties>
 
 	<dependencyManagement>
@@ -94,9 +94,9 @@
 			<version>4.2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.javafaker</groupId>
-			<artifactId>javafaker</artifactId>
-			<version>1.0.2</version>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
+			<version>2.5.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.yaml</groupId>

@@ -35,11 +35,10 @@ import java.util.stream.Stream;
 
 import javax.money.MonetaryAmount;
 
+import net.datafaker.Faker;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 import org.rapidpm.dependencies.core.logger.HasLogger;
-
-import com.github.javafaker.Faker;
 
 /**
  * Random data generator for the {@link BookStoreDemo}'s {@link Data} root.
@@ -57,7 +56,7 @@ public class RandomDataGenerator implements HasLogger
 		Map<City, List<Customer>> people;
 
 		CountryData(
-			final Faker  faker ,
+			final Faker faker ,
 			final Locale locale
 		)
 		{
@@ -107,14 +106,14 @@ public class RandomDataGenerator implements HasLogger
 	private final RandomDataAmount       dataAmount    ;
 	private final EmbeddedStorageManager storageManager;
 
-	private final Random                 random     = new Random()         ;
-	private final Faker                  faker      = Faker.instance()     ;
-	private final AtomicInteger          customerId = new AtomicInteger(0) ;
-	private final Set<String>            usedIsbns  = new HashSet<>(4096)  ;
+	private final Random                 random     = new Random();
+	private final Faker                  faker      = new Faker();
+	private final AtomicInteger          customerId = new AtomicInteger(0);
+	private final Set<String>            usedIsbns  = new HashSet<>(4096);
 	private final List<Book>             bookList   = new ArrayList<>(4096);
 
-	private final BigDecimal             minPrice   = new BigDecimal(5)                    ;
-	private final BigDecimal             maxPrice   = new BigDecimal(25)                   ;
+	private final BigDecimal             minPrice   = new BigDecimal(5);
+	private final BigDecimal             maxPrice   = new BigDecimal(25);
 	private final BigDecimal             priceRange = this.maxPrice.subtract(this.minPrice);
 
 	public RandomDataGenerator(
@@ -198,7 +197,7 @@ public class RandomDataGenerator implements HasLogger
 	{
 		this.logger().info("> country " + locale.getDisplayCountry());
 
-		final Faker              faker       = Faker.instance(locale);
+		final Faker              faker       = new Faker(locale);
 		final Set<String>        cityNameSet = new HashSet<>();
 		final Map<String, State> stateMap    = new HashMap<>();
 		final Country            country     = new Country(
@@ -208,8 +207,8 @@ public class RandomDataGenerator implements HasLogger
 		final CountryData        countryData = new CountryData(faker, locale);
 		this.randomRange(this.dataAmount.maxCitiesPerCountry()).forEach(i ->
 		{
-			final com.github.javafaker.Address fakerAddress = faker.address();
-			final String                       cityName     = fakerAddress.city();
+			final net.datafaker.providers.base.Address fakerAddress = faker.address();
+			final String                       cityName             = fakerAddress.city();
 			if(cityNameSet.add(cityName))
 			{
 				final String stateName = fakerAddress.state();
@@ -463,7 +462,7 @@ public class RandomDataGenerator implements HasLogger
 		final Faker faker
 	)
 	{
-		final com.github.javafaker.Address fa = faker.address();
+		final net.datafaker.providers.base.Address fa = faker.address();
 		return new Address(
 			fa.streetAddress(),
 			fa.secondaryAddress(),
