@@ -42,6 +42,9 @@ The start point is the main class [VaadinApplication](./src/main/java/org/eclips
 
 [Apache JEXL](./src/main/java/org/eclipse/store/demo/bookstore/scripting/) is used to execute arbitrary scripts on the object graph.
 
+## GigaMap
+
+There is a version of this demo which uses the [GigaMap](https://docs.eclipsestore.io/manual/gigamap/index.html) instead of the default collections. It can be found in this [branch](https://github.com/eclipse-store/bookstore-demo/tree/gigamap).
 
 ## If you find a bug or want to suggest an improvement
 
