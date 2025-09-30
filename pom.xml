@@ -40,7 +40,7 @@
 		<license.inceptionYear>2025</license.inceptionYear>
 		<license.licenseName>epl_only_v2</license.licenseName>
 		<license.licenceFile>LICENSE</license.licenceFile>
-		<eclipsestore.version>3.0.0</eclipsestore.version>
+		<eclipsestore.version>3.0.1</eclipsestore.version>
 		<lucene.version>10.2.2</lucene.version>
 		<vaadin.version>24.8.8</vaadin.version>
 	</properties>
