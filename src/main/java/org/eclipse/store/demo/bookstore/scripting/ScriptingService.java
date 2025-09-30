@@ -1,5 +1,6 @@
 package org.eclipse.store.demo.bookstore.scripting;
 
+import net.datafaker.Faker;
 import org.apache.commons.jexl3.JexlBuilder;
 import org.apache.commons.jexl3.JexlEngine;
 import org.apache.commons.jexl3.JexlFeatures;
@@ -7,8 +8,6 @@ import org.apache.commons.jexl3.MapContext;
 import org.apache.commons.jexl3.introspection.JexlPermissions;
 import org.eclipse.store.demo.bookstore.BookStoreDemo;
 import org.springframework.stereotype.Service;
-
-import com.github.javafaker.Faker;
 
 @Service
 public class ScriptingService
@@ -46,7 +45,7 @@ public class ScriptingService
 		// expose the demo instance
 		context.set("demo", BookStoreDemo.getInstance());
 		// expose a faker instance
-		context.set("faker", Faker.instance());
+		context.set("faker", new Faker());
 		return context;
 	}
 }
