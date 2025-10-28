@@ -7,8 +7,6 @@ logging.level:
 
 vaadin.allowed-packages: com.vaadin,org.vaadin,org.eclipse,graphql
 
-logging.level.org.atmosphere: warn
-
 spring:
   graphql:
     graphiql:
