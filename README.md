@@ -1,6 +1,6 @@
 # EclipseStore BookStore Demo
 
-A version of the BookStore Demo which uses the [GigaMap](https://docs.microstream.one/enterprise/gigamap/).
+A version of the BookStore Demo which uses the [GigaMap](https://docs.eclipsestore.io/manual/gigamap/index.html).
 
 ## Running locally
 
